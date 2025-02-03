@@ -1,0 +1,14 @@
+<resources>
+    <color name="purple_500">#9b3caf</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue_500">#1672b2</color>
+    <color name="yellow_500">#f4ce77</color>
+    <color name="cyan_500">#14cfca</color>
+    <color name="pink_500">#f41458</color>
+    <color name="dark_blue_900">#11063d</color>
+    <color name="orange_500">#f86e24</color>
+    <color name="purple_dark">#8b1455</color>
+    <color name="magenta_500">#c5258e</color>
+    <color name="red_500">#f23e1e</color>
+    <color name="black">#000000</color>
+</resources>

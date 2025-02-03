@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LoveLink</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="signup_button">Registrarse</string>
+</resources>
