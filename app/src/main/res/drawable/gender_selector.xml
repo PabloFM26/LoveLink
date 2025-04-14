@@ -1,0 +1,19 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Estado seleccionado -->
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#14cfca"/> <!-- Fondo azul seleccionado -->
+            <corners android:radius="12dp"/>
+            <stroke android:width="2dp" android:color="#14cfca"/>
+        </shape>
+    </item>
+
+    <!-- Estado no seleccionado -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#1E1E1E"/> <!-- Fondo oscuro -->
+            <corners android:radius="12dp"/>
+            <stroke android:width="2dp" android:color="#14cfca"/> <!-- Borde azul -->
+        </shape>
+    </item>
+</selector>

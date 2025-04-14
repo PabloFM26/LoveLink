@@ -1,40 +1,223 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/white">
+    android:background="@color/dark_blue_900"
+    android:padding="24dp">
 
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cuéntanos más sobre ti"
-        android:textSize="24sp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"/>
-
-    <EditText
-        android:id="@+id/orientationEditText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Orientación sexual"
-        android:layout_below="@id/titleTextView"
-        android:layout_marginTop="30dp"/>
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-    <EditText
-        android:id="@+id/hobbiesEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Hobbies"
-        android:layout_below="@id/orientationEditText"
-        android:layout_marginTop="16dp"/>
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Información adicional"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="24dp" />
 
-    <Button
-        android:id="@+id/finishButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Finalizar"
-        android:layout_below="@id/hobbiesEditText"
-        android:layout_marginTop="30dp"/>
-</RelativeLayout>
+        <!-- Orientación sexual -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Orientación sexual"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/orientationHetero"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Heterosexual" />
+
+            <TextView
+                android:id="@+id/orientationHomo"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Homosexual" />
+
+            <TextView
+                android:id="@+id/orientationBi"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Bisexual" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/orientationPan"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Pansexual" />
+
+            <TextView
+                android:id="@+id/orientationAsexual"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Asexual" />
+
+            <TextView
+                android:id="@+id/orientationOt"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Otro" />
+        </LinearLayout>
+
+        <!-- Signo del zodiaco -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Signo del zodiaco"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <!-- Signos del zodiaco en 4 filas -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp" android:layout_marginBottom="8dp" android:gravity="center" android:weightSum="3">
+            <TextView android:id="@+id/zodiacAries" style="@style/GenderOptionStyleMagenta" android:text="Aries" />
+            <TextView android:id="@+id/zodiacTaurus" style="@style/GenderOptionStyleMagenta" android:text="Tauro" />
+            <TextView android:id="@+id/zodiacGemini" style="@style/GenderOptionStyleMagenta" android:text="Géminis" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp" android:gravity="center" android:weightSum="3">
+            <TextView android:id="@+id/zodiacCancer" style="@style/GenderOptionStyleMagenta" android:text="Cáncer" />
+            <TextView android:id="@+id/zodiacLeo" style="@style/GenderOptionStyleMagenta" android:text="Leo" />
+            <TextView android:id="@+id/zodiacVirgo" style="@style/GenderOptionStyleMagenta" android:text="Virgo" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp" android:gravity="center" android:weightSum="3">
+            <TextView android:id="@+id/zodiacLibra" style="@style/GenderOptionStyleMagenta" android:text="Libra" />
+            <TextView android:id="@+id/zodiacScorpio" style="@style/GenderOptionStyleMagenta" android:text="Escorpio" />
+            <TextView android:id="@+id/zodiacSagittarius" style="@style/GenderOptionStyleMagenta" android:text="Sagitario" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="16dp" android:gravity="center" android:weightSum="3">
+            <TextView android:id="@+id/zodiacCapricorn" style="@style/GenderOptionStyleMagenta" android:text="Capricornio" />
+            <TextView android:id="@+id/zodiacAquarius" style="@style/GenderOptionStyleMagenta" android:text="Acuario" />
+            <TextView android:id="@+id/zodiacPisces" style="@style/GenderOptionStyleMagenta" android:text="Piscis" />
+        </LinearLayout>
+
+        <!-- Empleo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Empleo"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/jobEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_edittext2"
+            android:hint="Ej: Ingeniero, Estudiante..."
+            android:padding="16dp"
+            android:textColor="@color/magenta_500"
+            android:textColorHint="@color/magenta_500" />
+
+        <!-- Altura -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Altura (cm)"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/heightEditText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="56dp"
+                android:background="@drawable/rounded_edittext2"
+                android:hint="Ej: 170"
+                android:inputType="number"
+                android:padding="16dp"
+                android:textColor="@color/magenta_500"
+                android:textColorHint="@color/magenta_500" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:text="cm"
+                android:textColor="@color/magenta_500"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Intención -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="¿Qué buscas en LoveLink?"
+            android:textColor="@android:color/white" />
+
+        <!-- Selector de intención -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/intentionRelationship"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Relación seria" />
+
+            <TextView
+                android:id="@+id/intentionCasual"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Algo casual" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:weightSum="2"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/intentionFriendship"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Amistad" />
+
+            <TextView
+                android:id="@+id/intentionUnknown"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="No lo sé aún" />
+        </LinearLayout>
+
+        <!-- Botón de continuar -->
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:text="Continuar"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/magenta_500"
+            android:background="@drawable/rounded_button" />
+    </LinearLayout>
+</ScrollView>

@@ -36,7 +36,8 @@
         android:layout_marginTop="30dp"
         android:hint="Correo electrónico"
         android:textColor="@color/white"
-        android:textColorHint="@color/cyan_500" />
+        android:textColorHint="@color/cyan_500"
+        android:backgroundTint="@color/magenta_500" /> <!-- Barra color magenta -->
 
     <!-- Campo de contraseña -->
     <EditText
@@ -48,7 +49,8 @@
         android:hint="Contraseña"
         android:textColor="@color/white"
         android:textColorHint="@color/cyan_500"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:backgroundTint="@color/magenta_500" /> <!-- Barra color magenta -->
 
     <!-- Botón de inicio de sesión -->
     <Button
@@ -61,15 +63,25 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/magenta_500" />
 
-    <!-- Enlace para registrarse -->
-    <TextView
-        android:id="@+id/signupTextView"
-        android:layout_width="wrap_content"
+    <!-- Botón de registro debajo del botón de inicio de sesión -->
+    <Button
+        android:id="@+id/signupButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/loginButton"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:text="¿No tienes una cuenta? Regístrate"
-        android:textColor="@color/orange_500" />
+        android:textColor="@color/white"
+        android:backgroundTint="@color/magenta_500" />
 
+    <!-- Enlace para recuperar la contraseña -->
+    <TextView
+        android:id="@+id/forgotPasswordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signupButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="¿Olvidaste tu contraseña?"
+        android:textColor="@color/orange_500" />
 </RelativeLayout>

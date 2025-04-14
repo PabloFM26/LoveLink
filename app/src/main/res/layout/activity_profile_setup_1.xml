@@ -1,57 +1,163 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/white">
+    android:background="@color/dark_blue_900"
+    android:padding="24dp">
 
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Configura tu perfil"
-        android:textSize="24sp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"/>
-
-    <EditText
-        android:id="@+id/nameEditText"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre completo"
-        android:layout_below="@id/titleTextView"
-        android:layout_marginTop="30dp"/>
+        android:gravity="center_horizontal">
 
-    <EditText
-        android:id="@+id/nicknameEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Apodo"
-        android:layout_below="@id/nameEditText"
-        android:layout_marginTop="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Quién eres?"
+            android:textSize="28sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="24dp"/>
 
-    <EditText
-        android:id="@+id/ageEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Edad"
-        android:inputType="number"
-        android:layout_below="@id/nicknameEditText"
-        android:layout_marginTop="16dp"/>
+        <!-- Label Nombre -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre"
+            android:textColor="@android:color/white" />
 
-    <EditText
-        android:id="@+id/cityEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Ciudad"
-        android:layout_below="@id/ageEditText"
-        android:layout_marginTop="16dp"/>
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="@color/cyan_500"
+            android:textColorHint="@color/cyan_500"
+            android:hint="Nombre"
+            android:layout_marginTop="8dp"/>
 
-    <Button
-        android:id="@+id/continueButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Continuar"
-        android:layout_below="@id/cityEditText"
-        android:layout_marginTop="30dp"/>
-</RelativeLayout>
+        <!-- Label Apellidos -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Apellidos"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/surnameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="@color/cyan_500"
+            android:textColorHint="@color/cyan_500"
+            android:hint="Apellidos"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Label Género -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Género"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Género -->
+        <LinearLayout
+            android:id="@+id/genderGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/genderMale"
+                style="@style/GenderOptionStyle"
+                android:text="Hombre"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:minHeight="56dp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/genderFemale"
+                style="@style/GenderOptionStyle"
+                android:text="Mujer"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:minHeight="56dp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/genderOther"
+                style="@style/GenderOptionStyle"
+                android:text="No binario"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:minHeight="56dp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/genderNoSay"
+                style="@style/GenderOptionStyle"
+                android:text="Otro"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:minHeight="56dp"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- Label Fecha nacimiento -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha de nacimiento"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/birthdayEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="@color/cyan_500"
+            android:textColorHint="@color/cyan_500"
+            android:hint="dd/mm/aaaa"
+            android:focusable="false"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Label Localidad -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Localidad de España"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/cityEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="@color/cyan_500"
+            android:textColorHint="@color/cyan_500"
+            android:hint="Ciudad o municipio"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/continueButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Continuar"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/cyan_500"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/rounded_button"/>
+    </LinearLayout>
+</ScrollView>

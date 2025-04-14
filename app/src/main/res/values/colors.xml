@@ -9,6 +9,13 @@
     <color name="orange_500">#f86e24</color>
     <color name="purple_dark">#8b1455</color>
     <color name="magenta_500">#c5258e</color>
+    <color name="magenta">#c5258e</color>
     <color name="red_500">#f23e1e</color>
     <color name="black">#000000</color>
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gender_unselected">#888888</color>
+    <color name="gender_selected">#000000</color>
+    <color name="gender_selected_text">#1E1E1E</color>
+    <color name="gender_unselected_text">#14cfca</color>
+    <color name="gender_unselected_text2">#c5258e</color>
 </resources>

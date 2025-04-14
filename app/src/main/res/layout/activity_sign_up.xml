@@ -2,48 +2,103 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/white">
+    android:padding="24dp"
+    android:background="@color/dark_blue_900">
 
+    <!-- Logo -->
     <ImageView
         android:id="@+id/logoImageView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:src="@drawable/logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="40dp" />
 
-    <EditText
-        android:id="@+id/nameEditText"
+    <!-- Título sección contacto -->
+    <TextView
+        android:id="@+id/contactLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre completo"
+        android:text="Necesitamos poder contactar contigo"
+        android:textColor="@android:color/white"
         android:layout_below="@id/logoImageView"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="24dp" />
 
+    <!-- Teléfono -->
+    <EditText
+        android:id="@+id/phoneEditText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/contactLabel"
+        android:layout_marginTop="16dp"
+        android:hint="Teléfono"
+        android:inputType="phone"
+        android:textColor="@color/white"
+        android:textColorHint="@color/cyan_500"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp" />
+
+    <!-- Correo -->
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@id/phoneEditText"
+        android:layout_marginTop="16dp"
         android:hint="Correo electrónico"
         android:inputType="textEmailAddress"
-        android:layout_below="@id/nameEditText"
-        android:layout_marginTop="16dp"/>
+        android:textColor="@color/white"
+        android:textColorHint="@color/cyan_500"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp" />
 
+    <!-- Título sección seguridad -->
+    <TextView
+        android:id="@+id/securityLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Protege tu cuenta"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/emailEditText"
+        android:layout_marginTop="24dp" />
+
+    <!-- Contraseña -->
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Contraseña"
+        android:layout_height="50dp"
+        android:layout_below="@id/securityLabel"
+        android:layout_marginTop="16dp"
+        android:hint="Crea tu contraseña"
         android:inputType="textPassword"
-        android:layout_below="@id/emailEditText"
-        android:layout_marginTop="16dp"/>
+        android:textColor="@color/white"
+        android:textColorHint="@color/cyan_500"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp" />
 
+    <!-- Repetir contraseña -->
+    <EditText
+        android:id="@+id/password2EditText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/passwordEditText"
+        android:layout_marginTop="16dp"
+        android:hint="Repetir contraseña"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        android:textColorHint="@color/cyan_500"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp" />
+
+    <!-- Botón de registro -->
     <Button
         android:id="@+id/signupButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@id/password2EditText"
+        android:layout_marginTop="30dp"
         android:text="Registrarse"
-        android:layout_below="@id/passwordEditText"
-        android:layout_marginTop="30dp"/>
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_button" />
 </RelativeLayout>
