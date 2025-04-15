@@ -1,0 +1,145 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_blue_900"
+    android:padding="16dp">
+
+    <!-- Nombre de la App en la parte superior -->
+    <TextView
+        android:id="@+id/nombreApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="LoveLink"
+        android:textSize="28sp"
+        android:textColor="@color/yellow_500"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Contenedor de tarjetas (usuarios) -->
+    <LinearLayout
+        android:id="@+id/cardStack"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/nombreApp"
+        android:layout_above="@+id/likeNopeButtons"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical">
+
+        <!-- Imagen del usuario (más alta) -->
+        <ImageView
+            android:id="@+id/imagenUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop" />
+
+        <!-- Nombre y edad -->
+        <TextView
+            android:id="@+id/nombreEdadText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre, Edad"
+            android:textSize="22sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="center_horizontal" />
+
+        <!-- Localidad -->
+        <TextView
+            android:id="@+id/localidadText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Localidad"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <!-- Botones Like / Nope -->
+    <LinearLayout
+        android:id="@+id/likeNopeButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomNavigation"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnNope"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:text="✖"
+            android:textSize="24sp"
+            android:backgroundTint="@color/pink_500"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnLike"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:text="❤"
+            android:textSize="24sp"
+            android:backgroundTint="@color/yellow_500"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <!-- Barra de navegación inferior -->
+    <LinearLayout
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/magenta_500"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="4">
+
+        <TextView
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="🏠"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/nav_matches"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="💘"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/nav_chats"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="💬"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="👤"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

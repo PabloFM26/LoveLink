@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/matchesLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_blue_900"
+    android:padding="16dp">
+
+    <!-- Nombre de la App en la parte superior -->
+    <TextView
+        android:id="@+id/matchesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tus Matches 💘"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/yellow_500"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Contenedor de matches -->
+    <LinearLayout
+        android:id="@+id/matchesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/matchesTitle"
+        android:layout_above="@id/bottomNavigation"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="16dp" />
+
+    <!-- Barra de navegación inferior -->
+    <LinearLayout
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/magenta_500"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="4">
+
+        <TextView
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="🏠"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/nav_matches"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="💘"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/nav_chats"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="💬"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="👤"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</RelativeLayout>
