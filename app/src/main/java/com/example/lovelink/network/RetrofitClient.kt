@@ -2,24 +2,33 @@ package com.example.lovelink.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    // Definimos la variable mutable userService
-    @kotlin.jvm.JvmField
-    var userService: UserService
+    private const val BASE_URL = "http://10.0.2.2:8081/"
 
-    private const val BASE_URL = "http://localhost:8081/"  // Asegúrate de que esta URL sea la correcta de tu servidor Spring Boot
+    private val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
 
-    // Retrofit instancia
+    private val httpClient = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .build()
+
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())  // Para convertir respuestas a objetos Java
+            .client(httpClient)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    // Creamos la instancia de UserService
-    init {
-        userService = retrofit.create(UserService::class.java)  // Creamos la instancia de UserService para hacer peticiones
+    val cuentaService: CuentaService by lazy {
+        retrofit.create(CuentaService::class.java)
     }
 }

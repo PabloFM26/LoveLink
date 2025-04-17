@@ -90,11 +90,11 @@ class ProfileSetup1Activity : Activity() {
                 putExtra("name", name)
                 putExtra("surname", surname)
                 putExtra("gender", selectedGender)
-                putExtra("birthday", birthday)
                 putExtra("age", userAge)
                 putExtra("city", city)
             }
             startActivity(intent)
+
         }
     }
 }

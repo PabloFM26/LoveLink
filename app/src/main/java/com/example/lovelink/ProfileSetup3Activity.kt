@@ -11,8 +11,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.lovelink.models.User
-import com.example.lovelink.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -59,7 +57,7 @@ class ProfileSetup3Activity : AppCompatActivity() {
         }
 
         addHobbyButton.setOnClickListener { addHobby() }
-        finishButton.setOnClickListener { finishProfileSetup() }
+        /*finishButton.setOnClickListener { finishProfileSetup() }*/
     }
 
     private fun openGalleryOrCamera(slotIndex: Int) {
@@ -124,31 +122,34 @@ class ProfileSetup3Activity : AppCompatActivity() {
         }
     }
 
-    private fun finishProfileSetup() {
+    /*private fun finishProfileSetup() {
         val user = createUserFromIntent()
+
         if (user == null) {
-            Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "No se pudo crear el usuario. Revisa los datos esenciales.", Toast.LENGTH_SHORT).show()
             return
         }
 
         RetrofitClient.userService.registerUser(user).enqueue(object : Callback<User?> {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(this@ProfileSetup3Activity, "Usuario registrado exitosamente", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@ProfileSetup3Activity, MainActivity::class.java))
+                    Toast.makeText(this@ProfileSetup3Activity, "¡Usuario registrado!", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this@ProfileSetup3Activity, PosiblesMatchesActivity::class.java))
                     finish()
                 } else {
-                    Toast.makeText(this@ProfileSetup3Activity, "Error al registrar el usuario", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ProfileSetup3Activity, "Error al registrar. Intenta más tarde.", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<User?>, t: Throwable) {
-                Toast.makeText(this@ProfileSetup3Activity, "Error en la conexión", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ProfileSetup3Activity, "Fallo de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+
     }
 
-    private fun createUserFromIntent(): User? {
+
+    private fun createUserFromIntent(): User {
         val bio = bioEditText.text.toString()
         val hobbies = mutableListOf<String>()
 
@@ -157,35 +158,53 @@ class ProfileSetup3Activity : AppCompatActivity() {
             hobbies.add(hobbyButton.text.toString())
         }
 
-        if (bio.isEmpty() || hobbies.isEmpty() || imageUris.isEmpty()) return null
+        val telefono = passedIntent.getStringExtra("phone") ?: ""
+        val email = passedIntent.getStringExtra("email") ?: ""
+        val password = passedIntent.getStringExtra("password") ?: ""
+        val nombre = passedIntent.getStringExtra("name") ?: ""
+        val apellidos = passedIntent.getStringExtra("surname") ?: ""
+        val genero = passedIntent.getStringExtra("gender") ?: ""
+        val edad = passedIntent.getIntExtra("age", 0)
+        val localidad = passedIntent.getStringExtra("city") ?: ""
+        val orientacionSexual = passedIntent.getStringExtra("orientation") ?: ""
+        val signoZodiaco = passedIntent.getStringExtra("zodiac") ?: ""
+        val intencion = passedIntent.getStringExtra("intention") ?: ""
+        val empleo = passedIntent.getStringExtra("job") ?: ""
+        val altura = passedIntent.getStringExtra("height") ?: ""
 
-        val phone = passedIntent.getStringExtra("phone")
-        val email = passedIntent.getStringExtra("email")
-        val password = passedIntent.getStringExtra("password")
-        val name = passedIntent.getStringExtra("name")
-        val surname = passedIntent.getStringExtra("surname")
-        val gender = passedIntent.getStringExtra("gender")
-        val birthday = passedIntent.getStringExtra("birthday")
-        val age = passedIntent.getIntExtra("age", 0)
-        val city = passedIntent.getStringExtra("city")
-        val orientation = passedIntent.getStringExtra("orientation")
-        val zodiac = passedIntent.getStringExtra("zodiac")
-        val intention = passedIntent.getStringExtra("intention")
-        val job = passedIntent.getStringExtra("job")
-        val height = passedIntent.getStringExtra("height")
+        val imagePaths = imageUris.mapNotNull { getRealPathFromURI(it) }
+        val imagen1 = imagePaths.getOrNull(0) ?: ""
+        val imagen2 = imagePaths.getOrNull(1) ?: ""
+        val imagen3 = imagePaths.getOrNull(2) ?: ""
+        val imagen4 = imagePaths.getOrNull(3) ?: ""
+        val imagen5 = imagePaths.getOrNull(4) ?: ""
+        val imagen6 = imagePaths.getOrNull(5) ?: ""
 
-        val images = getImagePaths(imageUris)
-
-        return if (listOfNotNull(phone, email, password, name, surname, gender, birthday, city, orientation, zodiac, intention, job, height).size < 13)
-            null
-        else
-            User(
-                name!!, surname!!, email!!, phone!!, password!!, gender!!,
-                city!!, age, orientation!!, zodiac!!, bio,
-                hobbies.joinToString(","), job!!, intention!!, height!!, images
-            )
+        return User(
+            nombre,
+            apellidos,
+            email,
+            telefono,
+            password,
+            genero,
+            localidad,
+            edad,
+            orientacionSexual,
+            signoZodiaco,
+            bio,
+            hobbies.joinToString(","),
+            empleo,
+            intencion,
+            altura,
+            imagen1,
+            imagen2,
+            imagen3,
+            imagen4,
+            imagen5,
+            imagen6
+        )
     }
-
+    */
     private fun getImagePaths(imageUris: List<Uri>): String {
         return imageUris.mapNotNull { getRealPathFromURI(it) }.joinToString(",")
     }

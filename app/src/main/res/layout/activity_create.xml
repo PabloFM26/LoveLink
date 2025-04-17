@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_blue_900"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Nombre de la App en la parte superior -->
+        <TextView
+            android:id="@+id/nombreApp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:text="LoveLink"
+            android:textSize="28sp"
+            android:textColor="@color/yellow_500"
+            android:textStyle="bold" />
+
+        <!-- Sección: Logo -->
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:src="@drawable/logo"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Título sección contacto -->
+        <TextView
+            android:id="@+id/contactLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Necesitamos poder contactar contigo"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="24dp" />
+
+        <!-- Teléfono -->
+        <EditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:hint="Teléfono"
+            android:inputType="phone"
+            android:textColor="@color/white"
+            android:textColorHint="@color/cyan_500"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp" />
+
+        <!-- Correo -->
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:hint="Correo electrónico"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/white"
+            android:textColorHint="@color/cyan_500"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp" />
+
+        <!-- Título sección seguridad -->
+        <TextView
+            android:id="@+id/securityLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Protege tu cuenta"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="24dp" />
+
+        <!-- Contraseña -->
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:hint="Crea tu contraseña"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="@color/cyan_500"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp" />
+
+        <!-- Repetir contraseña -->
+        <EditText
+            android:id="@+id/password2EditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:hint="Repetir contraseña"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="@color/cyan_500"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp" />
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Quién eres?"
+            android:textSize="28sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="24dp" />
+
+        <!-- Label Nombre -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="@color/cyan_500"
+            android:textColorHint="@color/cyan_500"
+            android:hint="Nombre"
+            android:layout_marginTop="8dp" />
+
+        <!-- Label Apellidos -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Apellidos"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/surnameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="@color/cyan_500"
+            android:textColorHint="@color/cyan_500"
+            android:hint="Apellidos"
+            android:layout_marginTop="8dp" />
+
+        <!-- Label Género -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Género"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <!-- Género -->
+        <LinearLayout
+            android:id="@+id/genderGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/genderMale"
+                style="@style/GenderOptionStyle"
+                android:text="Hombre"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:minHeight="56dp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/genderFemale"
+                style="@style/GenderOptionStyle"
+                android:text="Mujer"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:minHeight="56dp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/genderOther"
+                style="@style/GenderOptionStyle"
+                android:text="No binario"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:minHeight="56dp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/genderNoSay"
+                style="@style/GenderOptionStyle"
+                android:text="Otro"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:minHeight="56dp"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- Label Fecha nacimiento -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha de nacimiento"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/birthdayEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="@color/cyan_500"
+            android:textColorHint="@color/cyan_500"
+            android:hint="dd/mm/aaaa"
+            android:focusable="false"
+            android:layout_marginTop="8dp" />
+
+        <!-- Label Localidad -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Localidad de España"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/cityEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="16dp"
+            android:textColor="@color/cyan_500"
+            android:textColorHint="@color/cyan_500"
+            android:hint="Ciudad o municipio"
+            android:layout_marginTop="8dp" />
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp" />
+
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Información adicional"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Orientación sexual -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Orientación sexual"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/orientationHetero"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Heterosexual" />
+
+            <TextView
+                android:id="@+id/orientationHomo"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Homosexual" />
+
+            <TextView
+                android:id="@+id/orientationBi"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Bisexual" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/orientationPan"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Pansexual" />
+
+            <TextView
+                android:id="@+id/orientationAsexual"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Asexual" />
+
+            <TextView
+                android:id="@+id/orientationOt"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Otro" />
+        </LinearLayout>
+
+        <!-- Signo del zodiaco -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Signo del zodiaco"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <!-- Signos del zodiaco en 4 filas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:weightSum="3">
+
+            <TextView android:id="@+id/zodiacAries" style="@style/GenderOptionStyleMagenta" android:text="Aries" />
+            <TextView android:id="@+id/zodiacTaurus" style="@style/GenderOptionStyleMagenta" android:text="Tauro" />
+            <TextView android:id="@+id/zodiacGemini" style="@style/GenderOptionStyleMagenta" android:text="Géminis" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:weightSum="3">
+
+            <TextView android:id="@+id/zodiacCancer" style="@style/GenderOptionStyleMagenta" android:text="Cáncer" />
+            <TextView android:id="@+id/zodiacLeo" style="@style/GenderOptionStyleMagenta" android:text="Leo" />
+            <TextView android:id="@+id/zodiacVirgo" style="@style/GenderOptionStyleMagenta" android:text="Virgo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:weightSum="3">
+
+            <TextView android:id="@+id/zodiacLibra" style="@style/GenderOptionStyleMagenta" android:text="Libra" />
+            <TextView android:id="@+id/zodiacScorpio" style="@style/GenderOptionStyleMagenta" android:text="Escorpio" />
+            <TextView android:id="@+id/zodiacSagittarius" style="@style/GenderOptionStyleMagenta" android:text="Sagitario" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:weightSum="3">
+
+            <TextView android:id="@+id/zodiacCapricorn" style="@style/GenderOptionStyleMagenta" android:text="Capricornio" />
+            <TextView android:id="@+id/zodiacAquarius" style="@style/GenderOptionStyleMagenta" android:text="Acuario" />
+            <TextView android:id="@+id/zodiacPisces" style="@style/GenderOptionStyleMagenta" android:text="Piscis" />
+        </LinearLayout>
+
+        <!-- Empleo -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Empleo"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/jobEditText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_edittext2"
+            android:hint="Ej: Ingeniero, Estudiante..."
+            android:padding="16dp"
+            android:textColor="@color/magenta_500"
+            android:textColorHint="@color/magenta_500" />
+
+        <!-- Altura -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Altura (cm)"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/heightEditText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="56dp"
+                android:background="@drawable/rounded_edittext2"
+                android:hint="Ej: 170"
+                android:inputType="number"
+                android:padding="16dp"
+                android:textColor="@color/magenta_500"
+                android:textColorHint="@color/magenta_500" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:text="cm"
+                android:textColor="@color/magenta_500"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Intención -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="¿Qué buscas en LoveLink?"
+            android:textColor="@android:color/white" />
+
+        <!-- Selector de intención -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/intentionRelationship"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Relación seria" />
+
+            <TextView
+                android:id="@+id/intentionCasual"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Algo casual" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:weightSum="2"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/intentionFriendship"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="Amistad" />
+
+            <TextView
+                android:id="@+id/intentionUnknown"
+                style="@style/GenderOptionStyleMagenta"
+                android:text="No lo sé aún" />
+        </LinearLayout>
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Completa tu perfil"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Galería de 6 imágenes -->
+        <LinearLayout
+            android:id="@+id/imageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/imageSlot1"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_edittext2"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:id="@+id/imageSlot2"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_edittext2"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:id="@+id/imageSlot3"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_edittext2"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:id="@+id/imageSlot4"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_edittext2"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:id="@+id/imageSlot5"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_edittext2"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:id="@+id/imageSlot6"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_edittext2"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Biografía -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Biografía (máx. 250 caracteres)"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/bioEditText"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:hint="Háblanos de ti"
+            android:background="@drawable/rounded_edittext2"
+            android:textColor="@color/magenta_500"
+            android:textColorHint="@color/magenta_500"
+            android:gravity="top|start"
+            android:padding="16dp"
+            android:inputType="textMultiLine"
+            android:maxLength="250"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Hobbies -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Añade hasta 5 gustos o hobbies"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/hobbyInput"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="56dp"
+                android:background="@drawable/rounded_edittext2"
+                android:hint="Ej: Senderismo"
+                android:textColor="@color/magenta_500"
+                android:textColorHint="@color/magenta_500"
+                android:padding="16dp" />
+
+            <Button
+                android:id="@+id/addHobbyButton"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:text="+"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/magenta_500"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hobbyListContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:gravity="center" />
+
+        <!-- Finalizar -->
+        <Button
+            android:id="@+id/finishButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Finalizar"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/magenta_500"
+            android:background="@drawable/rounded_button" />
+
+    </LinearLayout>
+</ScrollView>

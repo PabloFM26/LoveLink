@@ -108,11 +108,11 @@ class ProfileSetup2Activity : Activity() {
 
         // === BOTÓN CONTINUAR ===
         nextButton.setOnClickListener { v: View? ->
-            val job = jobEditText.text.toString().trim { it <= ' ' }
-            val height = heightEditText.text.toString().trim { it <= ' ' }
+            val empleo = jobEditText.text.toString().trim { it <= ' ' }
+            val altura = heightEditText.text.toString().trim { it <= ' ' }
 
             if (selectedOrientation.isEmpty() || selectedZodiac.isEmpty() || selectedIntention.isEmpty()
-                || job.isEmpty() || height.isEmpty()
+                || empleo.isEmpty() || altura.isEmpty()
             ) {
                 Toast.makeText(
                     this,
@@ -122,17 +122,14 @@ class ProfileSetup2Activity : Activity() {
                 return@setOnClickListener
             }
 
-            val intent =
-                Intent(
-                    this@ProfileSetup2Activity,
-                    ProfileSetup3Activity::class.java
-                )
-            intent.putExtra("orientation", selectedOrientation)
-            intent.putExtra("zodiac", selectedZodiac)
-            intent.putExtra("intention", selectedIntention)
-            intent.putExtra("job", job)
-            intent.putExtra("height", height)
+            val intent = Intent(this@ProfileSetup2Activity, ProfileSetup3Activity::class.java)
+            intent.putExtra("orientacionSexual", selectedOrientation)
+            intent.putExtra("signoZodiaco", selectedZodiac)
+            intent.putExtra("intencion", selectedIntention)
+            intent.putExtra("empleo", empleo)
+            intent.putExtra("altura", altura)
             startActivity(intent)
         }
+
     }
 }
