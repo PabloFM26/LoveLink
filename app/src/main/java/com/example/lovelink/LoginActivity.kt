@@ -6,6 +6,11 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.example.lovelink.models.Cuenta
+import com.example.lovelink.network.CuentaApi
+import com.example.lovelink.network.RetrofitClient
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : Activity() {
 
@@ -18,13 +23,11 @@ class LoginActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Referencias a los campos de entrada
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         loginButton = findViewById(R.id.loginButton)
         signupButton = findViewById(R.id.signupButton)
 
-        // Acción del botón de iniciar sesión
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
@@ -34,20 +37,35 @@ class LoginActivity : Activity() {
                 return@setOnClickListener
             }
 
-            // Autenticación simulada (sin base de datos)
-            getSharedPreferences("LoveLinkPrefs", MODE_PRIVATE).edit().apply {
-                putBoolean("isLoggedIn", true)
-                putString("email", email)
-                apply()
-            }
+            val cuenta = Cuenta(email = email, password = password, telefono = "") // Teléfono no necesario aquí
 
-            // Redirigir a la pantalla de posibles matches
-            val intent = Intent(this, PosiblesMatchesActivity::class.java)
-            startActivity(intent)
-            finish()
+            val api = RetrofitClient.retrofit.create(CuentaApi::class.java)
+
+            api.login(cuenta).enqueue(object : Callback<Cuenta> {
+                override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
+                    if (response.isSuccessful && response.body() != null) {
+                        Toast.makeText(this@LoginActivity, "Inicio de sesión correcto", Toast.LENGTH_SHORT).show()
+
+                        getSharedPreferences("LoveLinkPrefs", MODE_PRIVATE).edit().apply {
+                            putBoolean("isLoggedIn", true)
+                            putString("email", email)
+                            apply()
+                        }
+
+                        val intent = Intent(this@LoginActivity, PosiblesMatchesActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this@LoginActivity, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Cuenta>, t: Throwable) {
+                    Toast.makeText(this@LoginActivity, "Error de conexión: ${t.localizedMessage}", Toast.LENGTH_LONG).show()
+                }
+            })
         }
 
-        // Acción del botón de registrarse
         signupButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)

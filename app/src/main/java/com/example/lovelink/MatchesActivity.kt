@@ -4,10 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.ImageView
+import android.widget.*
 import androidx.core.content.ContextCompat
 
 class MatchesActivity : Activity() {
@@ -17,9 +14,8 @@ class MatchesActivity : Activity() {
     private lateinit var matchesContainer: LinearLayout
 
     private val matches = listOf(
-        // Ejemplo de matches (rellenables dinámicamente en el futuro)
-        Usuario("Lucía", 26, "Barcelona", R.drawable.sampleuseri),
-        Usuario("Diego", 31, "Zaragoza", R.drawable.sampleuserii)
+        Usuario("Diego", 36, "Barcelona", R.drawable.sampleuseri),
+        Usuario("María", 26, "Zaragoza", R.drawable.sampleuserii)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,25 +48,27 @@ class MatchesActivity : Activity() {
             }
         }
 
-        findViewById<View>(R.id.nav_home).setOnClickListener {
+        configurarNavegacionInferior()
+    }
+
+    private fun configurarNavegacionInferior() {
+        findViewById<Button>(R.id.nav_home).setOnClickListener {
             startActivity(Intent(this, PosiblesMatchesActivity::class.java))
             finish()
         }
 
-        findViewById<View>(R.id.nav_matches).setOnClickListener {
-            // Ya estás en esta ventana, no hacemos nada
+        findViewById<Button>(R.id.nav_matches).setOnClickListener {
             Toast.makeText(this, "Ya estás en Matches 💘", Toast.LENGTH_SHORT).show()
         }
 
-        findViewById<View>(R.id.nav_chats).setOnClickListener {
+        findViewById<Button>(R.id.nav_chats).setOnClickListener {
             startActivity(Intent(this, ChatsActivity::class.java))
             finish()
         }
 
-        findViewById<View>(R.id.nav_profile).setOnClickListener {
+        findViewById<Button>(R.id.nav_profile).setOnClickListener {
             startActivity(Intent(this, PerfilActivity::class.java))
             finish()
         }
-
     }
 }

@@ -1,6 +1,7 @@
 package com.example.lovelink
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -49,8 +50,14 @@ class SignUpActivity : Activity() {
             RetrofitClient.cuentaService.registrarCuenta(cuenta).enqueue(object : Callback<Cuenta> {
                 override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
                     if (response.isSuccessful) {
-                        Toast.makeText(this@SignUpActivity, "Cuenta creada con éxito", Toast.LENGTH_SHORT).show()
-                        finish()
+                        if (response.isSuccessful) {
+                            Toast.makeText(this@SignUpActivity, "Cuenta creada con éxito", Toast.LENGTH_SHORT).show()
+
+                            val intent = Intent(this@SignUpActivity, ProfileSetup1Activity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+
                     } else {
                         Toast.makeText(this@SignUpActivity, "Error al registrar cuenta", Toast.LENGTH_SHORT).show()
                         Log.e("SignUp", "Código de error: ${response.code()} - ${response.errorBody()?.string()}")

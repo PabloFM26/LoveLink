@@ -1,6 +1,7 @@
 package com.example.lovelink
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.core.content.ContextCompat
@@ -36,7 +37,6 @@ class PosiblesMatchesActivity : Activity() {
 
         mostrarUsuarioActual()
 
-        // Botones de acción
         btnLike.setOnClickListener {
             if (indiceActual < usuarios.size) {
                 Toast.makeText(this, "¡Le diste Like a ${usuarios[indiceActual].nombre}! 💖", Toast.LENGTH_SHORT).show()
@@ -54,6 +54,8 @@ class PosiblesMatchesActivity : Activity() {
                 Toast.makeText(this, "No hay más usuarios disponibles", Toast.LENGTH_SHORT).show()
             }
         }
+
+        configurarNavegacionInferior()
     }
 
     private fun mostrarUsuarioActual() {
@@ -79,5 +81,26 @@ class PosiblesMatchesActivity : Activity() {
     private fun avanzarUsuario() {
         indiceActual++
         mostrarUsuarioActual()
+    }
+
+    private fun configurarNavegacionInferior() {
+        findViewById<Button>(R.id.nav_home).setOnClickListener {
+            Toast.makeText(this, "Ya estás en Inicio 🏠", Toast.LENGTH_SHORT).show()
+        }
+
+        findViewById<Button>(R.id.nav_matches).setOnClickListener {
+            startActivity(Intent(this, MatchesActivity::class.java))
+            finish()
+        }
+
+        findViewById<Button>(R.id.nav_chats).setOnClickListener {
+            startActivity(Intent(this, ChatsActivity::class.java))
+            finish()
+        }
+
+        findViewById<Button>(R.id.nav_profile).setOnClickListener {
+            startActivity(Intent(this, PerfilActivity::class.java))
+            finish()
+        }
     }
 }

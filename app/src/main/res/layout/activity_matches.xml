@@ -16,20 +16,26 @@
         android:textColor="@color/yellow_500"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="8dp" />
 
-    <!-- Contenedor de matches -->
-    <LinearLayout
-        android:id="@+id/matchesContainer"
+    <!-- Scroll de los matches -->
+    <ScrollView
+        android:id="@+id/matchesScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/matchesTitle"
         android:layout_above="@id/bottomNavigation"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="12dp">
 
-    <!-- Barra de navegación inferior -->
+        <LinearLayout
+            android:id="@+id/matchesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal" />
+    </ScrollView>
+
+    <!-- Barra de navegación inferior con botones -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
@@ -40,44 +46,44 @@
         android:gravity="center"
         android:weightSum="4">
 
-        <TextView
+        <Button
             android:id="@+id/nav_home"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:text="🏠"
-            android:textSize="24sp"
+            android:textSize="20sp"
+            android:background="@android:color/transparent"
             android:textColor="@android:color/white" />
 
-        <TextView
+        <Button
             android:id="@+id/nav_matches"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:text="💘"
-            android:textSize="24sp"
+            android:textSize="20sp"
+            android:background="@android:color/transparent"
             android:textColor="@android:color/white" />
 
-        <TextView
+        <Button
             android:id="@+id/nav_chats"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:text="💬"
-            android:textSize="24sp"
+            android:textSize="20sp"
+            android:background="@android:color/transparent"
             android:textColor="@android:color/white" />
 
-        <TextView
+        <Button
             android:id="@+id/nav_profile"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:text="👤"
-            android:textSize="24sp"
+            android:textSize="20sp"
+            android:background="@android:color/transparent"
             android:textColor="@android:color/white" />
     </LinearLayout>
 </RelativeLayout>

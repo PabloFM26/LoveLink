@@ -106,24 +106,6 @@
             <TextView android:id="@+id/zodiacPisces" style="@style/GenderOptionStyleMagenta" android:text="Piscis" />
         </LinearLayout>
 
-        <!-- Empleo -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Empleo"
-            android:textColor="@android:color/white" />
-
-        <EditText
-            android:id="@+id/jobEditText"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/rounded_edittext2"
-            android:hint="Ej: Ingeniero, Estudiante..."
-            android:padding="16dp"
-            android:textColor="@color/magenta_500"
-            android:textColorHint="@color/magenta_500" />
-
         <!-- Altura -->
         <TextView
             android:layout_width="match_parent"
