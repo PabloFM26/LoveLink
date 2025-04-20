@@ -34,4 +34,8 @@ object RetrofitClient {
     val usuarioService: UsuarioService by lazy {
         retrofit.create(UsuarioService::class.java)
     }
+    val imagenesUsuarioService: ImagenesUsuarioService by lazy {
+        retrofit.create(ImagenesUsuarioService::class.java)
+    }
+
 }

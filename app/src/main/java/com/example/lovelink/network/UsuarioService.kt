@@ -13,4 +13,8 @@ interface UsuarioService {
         @Path("id") id: Long,
         @Body usuario: Usuario
     ): Call<Usuario>
+
+    @GET("api/usuarios/ultimo")
+    fun obtenerUltimoUsuario(): Call<Usuario>
+
 }

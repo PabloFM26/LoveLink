@@ -15,6 +15,7 @@ class PosiblesMatchesActivity : Activity() {
     private lateinit var imagenUsuario: ImageView
 
     private var indiceActual = 0
+    private var usuarioId: Long = -1L // Propiedad que guarda el ID recibido
 
     data class Usuario(val nombre: String, val edad: Int, val localidad: String, val imagenResId: Int)
 
@@ -27,6 +28,10 @@ class PosiblesMatchesActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_posibles_matches)
+
+        // Recoge el ID del usuario que se pasó por intent
+        usuarioId = intent.getLongExtra("usuario_id", -1L)
+        Toast.makeText(this, "ID recibido: $usuarioId", Toast.LENGTH_SHORT).show()
 
         // Referencias UI
         btnLike = findViewById(R.id.btnLike)

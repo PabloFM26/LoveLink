@@ -21,7 +21,13 @@ class ProfileSetup1Activity : Activity() {
     private lateinit var surnameEditText: EditText
     private lateinit var birthdayEditText: EditText
     private lateinit var cityEditText: EditText
+    private lateinit var heightEditText: EditText
+
     private var selectedGender: String = ""
+    private var selectedOrientation: String = "N/A"
+    private var selectedZodiac: String = "N/A"
+    private var selectedIntention: String = "N/A"
+
     private var userAge: Int = 0
     private var cuentaId: Long = -1
 
@@ -29,24 +35,21 @@ class ProfileSetup1Activity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_setup_1)
 
-        // Llamada para obtener el último ID de cuenta
         obtenerUltimoIdCuenta()
 
-        // Referencias UI
         nameEditText = findViewById(R.id.nameEditText)
         surnameEditText = findViewById(R.id.surnameEditText)
         birthdayEditText = findViewById(R.id.birthdayEditText)
         cityEditText = findViewById(R.id.cityEditText)
+        heightEditText = findViewById(R.id.heightEditText)
         val continueButton = findViewById<Button>(R.id.continueButton)
 
-        // Género
         val genderOptions = arrayOf(
             findViewById<TextView>(R.id.genderMale),
             findViewById<TextView>(R.id.genderFemale),
             findViewById<TextView>(R.id.genderOther),
             findViewById<TextView>(R.id.genderNoSay)
         )
-
         genderOptions.forEach { genderView ->
             genderView.setOnClickListener {
                 genderOptions.forEach {
@@ -59,7 +62,62 @@ class ProfileSetup1Activity : Activity() {
             }
         }
 
-        // Fecha de nacimiento
+        val orientationOptions = arrayOf(
+            findViewById<TextView>(R.id.orientationHetero),
+            findViewById<TextView>(R.id.orientationHomo),
+            findViewById<TextView>(R.id.orientationBi),
+            findViewById<TextView>(R.id.orientationPan),
+            findViewById<TextView>(R.id.orientationAsexual),
+            findViewById<TextView>(R.id.orientationOt)
+        )
+        orientationOptions.forEach { view ->
+            view.setOnClickListener {
+                orientationOptions.forEach {
+                    it.isSelected = false
+                    it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
+                }
+                view.isSelected = true
+                view.setTextColor(ContextCompat.getColor(this, R.color.gender_selected))
+                selectedOrientation = view.text.toString()
+            }
+        }
+
+        val zodiacOptions = arrayOf(
+            findViewById<TextView>(R.id.zodiacAries), findViewById(R.id.zodiacTaurus), findViewById(R.id.zodiacGemini),
+            findViewById(R.id.zodiacCancer), findViewById(R.id.zodiacLeo), findViewById(R.id.zodiacVirgo),
+            findViewById(R.id.zodiacLibra), findViewById(R.id.zodiacScorpio), findViewById(R.id.zodiacSagittarius),
+            findViewById(R.id.zodiacCapricorn), findViewById(R.id.zodiacAquarius), findViewById(R.id.zodiacPisces)
+        )
+        zodiacOptions.forEach { view ->
+            view.setOnClickListener {
+                zodiacOptions.forEach {
+                    it.isSelected = false
+                    it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
+                }
+                view.isSelected = true
+                view.setTextColor(ContextCompat.getColor(this, R.color.gender_selected))
+                selectedZodiac = view.text.toString()
+            }
+        }
+
+        val intentionOptions = arrayOf(
+            findViewById<TextView>(R.id.intentionRelationship),
+            findViewById<TextView>(R.id.intentionCasual),
+            findViewById<TextView>(R.id.intentionFriendship),
+            findViewById<TextView>(R.id.intentionUnknown)
+        )
+        intentionOptions.forEach { view ->
+            view.setOnClickListener {
+                intentionOptions.forEach {
+                    it.isSelected = false
+                    it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
+                }
+                view.isSelected = true
+                view.setTextColor(ContextCompat.getColor(this, R.color.gender_selected))
+                selectedIntention = view.text.toString()
+            }
+        }
+
         birthdayEditText.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -68,18 +126,13 @@ class ProfileSetup1Activity : Activity() {
 
             DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
                 birthdayEditText.setText("$selectedDay/${selectedMonth + 1}/$selectedYear")
-
                 val today = Calendar.getInstance()
-                val birthDate = Calendar.getInstance().apply {
-                    set(selectedYear, selectedMonth, selectedDay)
-                }
-
+                val birthDate = Calendar.getInstance().apply { set(selectedYear, selectedMonth, selectedDay) }
                 userAge = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR)
                 if (today.get(Calendar.DAY_OF_YEAR) < birthDate.get(Calendar.DAY_OF_YEAR)) userAge--
             }, year, month, day).show()
         }
 
-        // Botón continuar
         continueButton.setOnClickListener {
             if (cuentaId == -1L) {
                 Toast.makeText(this, "ID de cuenta no disponible", Toast.LENGTH_SHORT).show()
@@ -90,6 +143,7 @@ class ProfileSetup1Activity : Activity() {
             val surname = surnameEditText.text.toString().trim()
             val birthday = birthdayEditText.text.toString().trim()
             val city = cityEditText.text.toString().trim()
+            val height = heightEditText.text.toString().toIntOrNull() ?: -1
 
             if (name.isEmpty() || surname.isEmpty() || birthday.isEmpty() || city.isEmpty()) {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
@@ -108,10 +162,10 @@ class ProfileSetup1Activity : Activity() {
                 genero = selectedGender,
                 localidad = city,
                 edad = userAge,
-                orientacionSexual = "N/A",
-                signoZodiaco = "N/A",
-                intencion = "N/A",
-                altura = -1
+                orientacionSexual = selectedOrientation,
+                signoZodiaco = selectedZodiac,
+                intencion = selectedIntention,
+                altura = height
             )
 
             RetrofitClient.usuarioService.crearUsuario(usuario).enqueue(object : Callback<Usuario> {
@@ -119,7 +173,6 @@ class ProfileSetup1Activity : Activity() {
                     if (response.isSuccessful) {
                         val usuarioCreado = response.body()
                         Toast.makeText(this@ProfileSetup1Activity, "Datos guardados", Toast.LENGTH_SHORT).show()
-
                         val intent = Intent(this@ProfileSetup1Activity, ProfileSetup2Activity::class.java).apply {
                             putExtra("usuarioId", usuarioCreado?.id_usuario ?: -1)
                         }
@@ -144,10 +197,10 @@ class ProfileSetup1Activity : Activity() {
                 if (response.isSuccessful) {
                     val cuenta = response.body()
                     cuentaId = (cuenta?.id ?: -1).toLong()
-                    Log.d("ProfileSetup", "Última cuenta ID: $cuentaId")
+                    Log.d("ProfileSetup", "\u00daltima cuenta ID: $cuentaId")
                 } else {
                     Toast.makeText(this@ProfileSetup1Activity, "Error al obtener la cuenta", Toast.LENGTH_SHORT).show()
-                    Log.e("ProfileSetup", "Código: ${response.code()} - ${response.errorBody()?.string()}")
+                    Log.e("ProfileSetup", "C\u00f3digo: ${response.code()} - ${response.errorBody()?.string()}")
                 }
             }
 
