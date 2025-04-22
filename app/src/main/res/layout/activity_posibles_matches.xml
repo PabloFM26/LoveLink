@@ -2,8 +2,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_blue_900"
-    android:padding="16dp">
+    android:background="@color/dark_blue_900">
 
     <!-- Nombre de la App en la parte superior -->
     <TextView
@@ -16,7 +15,7 @@
         android:textSize="28sp"
         android:textColor="@color/yellow_500"
         android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginTop="16dp" />
 
     <!-- Contenedor de tarjetas (usuarios) -->
     <LinearLayout
@@ -25,10 +24,9 @@
         android:layout_height="0dp"
         android:layout_below="@id/nombreApp"
         android:layout_above="@+id/likeNopeButtons"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Imagen del usuario -->
         <ImageView
             android:id="@+id/imagenUsuario"
             android:layout_width="match_parent"
@@ -36,7 +34,6 @@
             android:layout_gravity="center"
             android:scaleType="centerCrop" />
 
-        <!-- Nombre y edad -->
         <TextView
             android:id="@+id/nombreEdadText"
             android:layout_width="wrap_content"
@@ -47,7 +44,6 @@
             android:layout_marginTop="12dp"
             android:layout_gravity="center_horizontal" />
 
-        <!-- Localidad -->
         <TextView
             android:id="@+id/localidadText"
             android:layout_width="wrap_content"
@@ -64,10 +60,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/bottomNavigation"
-        android:layout_marginBottom="16dp"
-        android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="8dp"
+        android:gravity="center">
 
         <Button
             android:id="@+id/btnNope"
@@ -90,7 +87,7 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 
-    <!-- Barra de navegación inferior con botones -->
+    <!-- Barra de navegación inferior sin márgenes, fija y pegada -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
@@ -109,7 +106,8 @@
             android:text="🏠"
             android:textSize="20sp"
             android:background="@android:color/transparent"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:padding="0dp" />
 
         <Button
             android:id="@+id/nav_matches"
@@ -119,7 +117,8 @@
             android:text="💘"
             android:textSize="20sp"
             android:background="@android:color/transparent"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:padding="0dp" />
 
         <Button
             android:id="@+id/nav_chats"
@@ -129,7 +128,8 @@
             android:text="💬"
             android:textSize="20sp"
             android:background="@android:color/transparent"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:padding="0dp" />
 
         <Button
             android:id="@+id/nav_profile"
@@ -139,6 +139,8 @@
             android:text="👤"
             android:textSize="20sp"
             android:background="@android:color/transparent"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:padding="0dp" />
     </LinearLayout>
+
 </RelativeLayout>

@@ -2,10 +2,9 @@
     android:id="@+id/chatsRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_blue_900"
-    android:padding="16dp">
+    android:background="@color/dark_blue_900">
 
-    <!-- Texto centrado provisional -->
+    <!-- Texto centrado (ahora justo encima de la barra) -->
     <TextView
         android:id="@+id/chatText"
         android:layout_width="wrap_content"
@@ -13,9 +12,11 @@
         android:text="Tus conversaciones aparecerán aquí 💬"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:layout_centerInParent="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/bottomNavigation"
+        android:layout_marginBottom="32dp" />
 
-    <!-- Barra de navegación inferior con botones -->
+    <!-- Barra de navegación inferior fija sin padding ni margen -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
@@ -24,7 +25,8 @@
         android:orientation="horizontal"
         android:background="@color/magenta_500"
         android:weightSum="4"
-        android:gravity="center">
+        android:gravity="center"
+        android:padding="0dp">
 
         <Button
             android:id="@+id/nav_home"
