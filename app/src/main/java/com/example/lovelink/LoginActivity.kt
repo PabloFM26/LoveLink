@@ -64,7 +64,7 @@ class LoginActivity : Activity() {
                             apply()
                         }
 
-                        // Obtener el usuario asociado a esa cuenta
+                        // Obtener el usuario asociado a cuenta introducida
                         val usuarioApi = RetrofitClient.retrofit.create(UsuarioApi::class.java)
                         usuarioApi.obtenerUsuarioPorCuenta(idCuenta).enqueue(object : Callback<Usuario> {
                             override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
