@@ -114,7 +114,7 @@ class ProfileSetup2Activity : AppCompatActivity() {
             .enqueue(object : Callback<Usuario> {
             override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
                 if (response.isSuccessful) {
-                    usuarioId = response.body()?.id_usuario ?: -1
+                    usuarioId = response.body()?.id ?: -1
 
                 } else {
                     Toast.makeText(this@ProfileSetup2Activity, "Error al obtener el usuario", Toast.LENGTH_SHORT).show()

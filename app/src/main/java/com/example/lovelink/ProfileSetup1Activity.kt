@@ -174,7 +174,7 @@ class ProfileSetup1Activity : Activity() {
                         val usuarioCreado = response.body()
                         Toast.makeText(this@ProfileSetup1Activity, "Datos guardados", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@ProfileSetup1Activity, ProfileSetup2Activity::class.java).apply {
-                            putExtra("usuarioId", usuarioCreado?.id_usuario ?: -1)
+                            putExtra("usuarioId", usuarioCreado?.id ?: -1)
                         }
                         startActivity(intent)
                     } else {

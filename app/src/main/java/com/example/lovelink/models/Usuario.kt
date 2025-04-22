@@ -3,7 +3,7 @@ package com.example.lovelink.models
 import com.google.gson.annotations.SerializedName
 
 data class Usuario(
-    @SerializedName("id") val id_usuario: Long? = null,
+    @SerializedName("id") val id: Long? = null,
     val id_cuenta: Long,
     val nombre: String?,
     val apellidos: String?,
