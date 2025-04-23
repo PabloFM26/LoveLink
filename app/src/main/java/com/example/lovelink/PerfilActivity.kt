@@ -10,10 +10,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.example.lovelink.models.ImagenesUsuario
+import com.example.lovelink.models.Usuario
+import com.example.lovelink.models.Cuenta
+import com.example.lovelink.network.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 class PerfilActivity : AppCompatActivity() {
 
+    private var usuarioId: Long = -1L
     private lateinit var phoneEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -36,7 +45,8 @@ class PerfilActivity : AppCompatActivity() {
         setContentView(R.layout.activity_perfil)
         supportActionBar?.hide()
 
-        // Referencias
+        usuarioId = intent.getLongExtra("usuario_id", -1L)
+
         phoneEditText = findViewById(R.id.phoneEditText)
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
@@ -48,43 +58,33 @@ class PerfilActivity : AppCompatActivity() {
         heightEditText = findViewById(R.id.heightEditText)
 
         imageSlots = arrayOf(
-            findViewById(R.id.imageSlot1),
-            findViewById(R.id.imageSlot2),
-            findViewById(R.id.imageSlot3),
-            findViewById(R.id.imageSlot4),
-            findViewById(R.id.imageSlot5),
-            findViewById(R.id.imageSlot6)
+            findViewById(R.id.imageSlot1), findViewById(R.id.imageSlot2),
+            findViewById(R.id.imageSlot3), findViewById(R.id.imageSlot4),
+            findViewById(R.id.imageSlot5), findViewById(R.id.imageSlot6)
         )
 
         imageSlots.forEachIndexed { index, imageView ->
             imageView.setOnClickListener { openGalleryOrCamera(index) }
         }
 
-        // Selectores de opciones
         setupTextOptionSelectors(
             listOf(R.id.genderMale, R.id.genderFemale, R.id.genderOther, R.id.genderNoSay)
         ) { selectedGender = it }
 
         setupTextOptionSelectors(
-            listOf(
-                R.id.orientationHetero, R.id.orientationHomo, R.id.orientationBi,
-                R.id.orientationPan, R.id.orientationAsexual, R.id.orientationOt
-            )
+            listOf(R.id.orientationHetero, R.id.orientationHomo, R.id.orientationBi,
+                R.id.orientationPan, R.id.orientationAsexual, R.id.orientationOt)
         ) { selectedOrientation = it }
 
         setupTextOptionSelectors(
-            listOf(
-                R.id.zodiacAries, R.id.zodiacTaurus, R.id.zodiacGemini, R.id.zodiacCancer,
+            listOf(R.id.zodiacAries, R.id.zodiacTaurus, R.id.zodiacGemini, R.id.zodiacCancer,
                 R.id.zodiacLeo, R.id.zodiacVirgo, R.id.zodiacLibra, R.id.zodiacScorpio,
-                R.id.zodiacSagittarius, R.id.zodiacCapricorn, R.id.zodiacAquarius, R.id.zodiacPisces
-            )
+                R.id.zodiacSagittarius, R.id.zodiacCapricorn, R.id.zodiacAquarius, R.id.zodiacPisces)
         ) { selectedZodiac = it }
 
         setupTextOptionSelectors(
-            listOf(
-                R.id.intentionRelationship, R.id.intentionCasual,
-                R.id.intentionFriendship, R.id.intentionUnknown
-            )
+            listOf(R.id.intentionRelationship, R.id.intentionCasual,
+                R.id.intentionFriendship, R.id.intentionUnknown)
         ) { selectedIntention = it }
 
         birthdayEditText.setOnClickListener {
@@ -95,6 +95,75 @@ class PerfilActivity : AppCompatActivity() {
         }
 
         configurarNavegacionInferior()
+        cargarDatosUsuario()
+        cargarImagenesUsuario()
+    }
+
+    private fun cargarDatosUsuario() {
+        RetrofitClient.usuarioService.getUsuarioById(usuarioId).enqueue(object : Callback<Usuario> {
+            override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
+                val usuario = response.body()
+                if (usuario != null) {
+                    nameEditText.setText(usuario.nombre)
+                    surnameEditText.setText(usuario.apellidos)
+                    cityEditText.setText(usuario.localidad)
+                    heightEditText.setText(usuario.altura?.toString() ?: "")
+                    seleccionarTexto(usuario.genero, usuario.orientacionSexual, usuario.signoZodiaco, usuario.intencion)
+                    cargarCuenta(usuario.id_cuenta)
+                }
+            }
+
+            override fun onFailure(call: Call<Usuario>, t: Throwable) {
+                Toast.makeText(this@PerfilActivity, "Error cargando usuario", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun cargarCuenta(idCuenta: Long) {
+        RetrofitClient.cuentaService.obtenerCuentaPorId(idCuenta).enqueue(object : Callback<Cuenta> {
+            override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
+                val cuenta = response.body()
+                if (cuenta != null) {
+                    emailEditText.setText(cuenta.email)
+                    phoneEditText.setText(cuenta.telefono)
+                }
+            }
+
+            override fun onFailure(call: Call<Cuenta>, t: Throwable) {
+                Toast.makeText(this@PerfilActivity, "Error cargando datos de cuenta", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun cargarImagenesUsuario() {
+        RetrofitClient.imagenesUsuarioService.getImagenesByUsuarioId(usuarioId).enqueue(object : Callback<ImagenesUsuario> {
+            override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
+                val imagenes = response.body()
+                val rutas = listOf(
+                    imagenes?.imagen1, imagenes?.imagen2, imagenes?.imagen3,
+                    imagenes?.imagen4, imagenes?.imagen5, imagenes?.imagen6
+                )
+                rutas.forEachIndexed { i, url ->
+                    if (!url.isNullOrEmpty()) Glide.with(this@PerfilActivity).load(url).into(imageSlots[i])
+                }
+            }
+
+            override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
+                Toast.makeText(this@PerfilActivity, "Error cargando imágenes", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun seleccionarTexto(genero: String?, orientacion: String?, zodiaco: String?, intencion: String?) {
+        val activar = { ids: IntArray, valor: String? ->
+            ids.map { findViewById<TextView>(it) }.forEach { tv ->
+                if (tv.text.toString().equals(valor, ignoreCase = true)) tv.performClick()
+            }
+        }
+        activar(intArrayOf(R.id.genderMale, R.id.genderFemale, R.id.genderOther, R.id.genderNoSay), genero)
+        activar(intArrayOf(R.id.orientationHetero, R.id.orientationHomo, R.id.orientationBi, R.id.orientationPan, R.id.orientationAsexual, R.id.orientationOt), orientacion)
+        activar(intArrayOf(R.id.zodiacAries, R.id.zodiacTaurus, R.id.zodiacGemini, R.id.zodiacCancer, R.id.zodiacLeo, R.id.zodiacVirgo, R.id.zodiacLibra, R.id.zodiacScorpio, R.id.zodiacSagittarius, R.id.zodiacCapricorn, R.id.zodiacAquarius, R.id.zodiacPisces), zodiaco)
+        activar(intArrayOf(R.id.intentionRelationship, R.id.intentionCasual, R.id.intentionFriendship, R.id.intentionUnknown), intencion)
     }
 
     private fun openGalleryOrCamera(slotIndex: Int) {
@@ -128,9 +197,10 @@ class PerfilActivity : AppCompatActivity() {
             view.setOnClickListener {
                 views.forEach {
                     it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
-                    it.setBackgroundResource(R.drawable.gender_selected_magenta)
+                    it.setBackgroundResource(R.drawable.gender_selector)
                 }
                 view.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+                view.setBackgroundResource(R.drawable.gender_selector_blue)
                 onSelected(view.text.toString())
             }
         }
@@ -138,20 +208,17 @@ class PerfilActivity : AppCompatActivity() {
 
     private fun configurarNavegacionInferior() {
         findViewById<Button>(R.id.nav_home).setOnClickListener {
-            startActivity(Intent(this, PosiblesMatchesActivity::class.java))
+            startActivity(Intent(this, PosiblesMatchesActivity::class.java).putExtra("usuario_id", usuarioId))
             finish()
         }
-
         findViewById<Button>(R.id.nav_matches).setOnClickListener {
-            startActivity(Intent(this, MatchesActivity::class.java))
+            startActivity(Intent(this, MatchesActivity::class.java).putExtra("usuario_id", usuarioId))
             finish()
         }
-
         findViewById<Button>(R.id.nav_chats).setOnClickListener {
-            startActivity(Intent(this, ChatsActivity::class.java))
+            startActivity(Intent(this, ChatsActivity::class.java).putExtra("usuario_id", usuarioId))
             finish()
         }
-
         findViewById<Button>(R.id.nav_profile).setOnClickListener {
             Toast.makeText(this, "Ya estás en Perfil 👤", Toast.LENGTH_SHORT).show()
         }

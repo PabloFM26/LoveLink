@@ -12,6 +12,7 @@ class MatchesActivity : Activity() {
     data class Usuario(val nombre: String, val edad: Int, val localidad: String, val imagenResId: Int)
 
     private lateinit var matchesContainer: LinearLayout
+    private var usuarioId: Long = -1L
 
     private val matches = listOf(
         Usuario("Diego", 36, "Barcelona", R.drawable.sampleuseri),
@@ -21,6 +22,9 @@ class MatchesActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_matches)
+
+        // Obtener el ID del usuario recibido
+        usuarioId = intent.getLongExtra("usuario_id", -1L)
 
         matchesContainer = findViewById(R.id.matchesContainer)
 
@@ -53,7 +57,9 @@ class MatchesActivity : Activity() {
 
     private fun configurarNavegacionInferior() {
         findViewById<Button>(R.id.nav_home).setOnClickListener {
-            startActivity(Intent(this, PosiblesMatchesActivity::class.java))
+            val intent = Intent(this, PosiblesMatchesActivity::class.java)
+            intent.putExtra("usuario_id", usuarioId)
+            startActivity(intent)
             finish()
         }
 
@@ -62,12 +68,16 @@ class MatchesActivity : Activity() {
         }
 
         findViewById<Button>(R.id.nav_chats).setOnClickListener {
-            startActivity(Intent(this, ChatsActivity::class.java))
+            val intent = Intent(this, ChatsActivity::class.java)
+            intent.putExtra("usuario_id", usuarioId)
+            startActivity(intent)
             finish()
         }
 
         findViewById<Button>(R.id.nav_profile).setOnClickListener {
-            startActivity(Intent(this, PerfilActivity::class.java))
+            val intent = Intent(this, PerfilActivity::class.java)
+            intent.putExtra("usuario_id", usuarioId)
+            startActivity(intent)
             finish()
         }
     }

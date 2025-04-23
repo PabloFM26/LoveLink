@@ -1,3 +1,4 @@
+// SignUpActivity.kt
 package com.example.lovelink
 
 import android.app.Activity
@@ -46,21 +47,19 @@ class SignUpActivity : Activity() {
                 password = password
             )
 
-            // Llamada a la API
             RetrofitClient.cuentaService.registrarCuenta(cuenta).enqueue(object : Callback<Cuenta> {
                 override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
                     if (response.isSuccessful) {
-                        if (response.isSuccessful) {
-                            Toast.makeText(this@SignUpActivity, "Cuenta creada con éxito", Toast.LENGTH_SHORT).show()
-
+                        val cuentaCreada = response.body()
+                        if (cuentaCreada != null) {
                             val intent = Intent(this@SignUpActivity, ProfileSetup1Activity::class.java)
+                            intent.putExtra("cuenta_id", cuentaCreada.id)
                             startActivity(intent)
                             finish()
                         }
-
                     } else {
                         Toast.makeText(this@SignUpActivity, "Error al registrar cuenta", Toast.LENGTH_SHORT).show()
-                        Log.e("SignUp", "Código de error: ${response.code()} - ${response.errorBody()?.string()}")
+                        Log.e("SignUp", "Error: ${response.code()} - ${response.errorBody()?.string()}")
                     }
                 }
 

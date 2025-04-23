@@ -1,0 +1,6 @@
+<!-- gender_selector_blue.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/cyan_500" />
+    <corners android:radius="16dp" />
+</shape>

@@ -8,13 +8,8 @@ interface UsuarioService {
     @POST("api/usuarios")
     fun crearUsuario(@Body usuario: Usuario): Call<Usuario>
 
-    @PUT("api/usuarios/{id}")
-    fun actualizarUsuario(
-        @Path("id") id: Long,
-        @Body usuario: Usuario
-    ): Call<Usuario>
+    @GET("api/usuarios/{id}")
+    fun getUsuarioById(@Path("id") id: Long): Call<Usuario>
 
-    @GET("api/usuarios/ultimo")
-    fun obtenerUltimoUsuario(): Call<Usuario>
 
 }

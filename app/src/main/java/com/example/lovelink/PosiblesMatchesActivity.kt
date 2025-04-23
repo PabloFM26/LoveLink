@@ -94,18 +94,25 @@ class PosiblesMatchesActivity : Activity() {
         }
 
         findViewById<Button>(R.id.nav_matches).setOnClickListener {
-            startActivity(Intent(this, MatchesActivity::class.java))
+            val intent = Intent(this, MatchesActivity::class.java)
+            intent.putExtra("usuario_id", usuarioId) // Pasar ID
+            startActivity(intent)
             finish()
         }
 
         findViewById<Button>(R.id.nav_chats).setOnClickListener {
-            startActivity(Intent(this, ChatsActivity::class.java))
+            val intent = Intent(this, ChatsActivity::class.java)
+            intent.putExtra("usuario_id", usuarioId) // Pasar ID
+            startActivity(intent)
             finish()
         }
 
         findViewById<Button>(R.id.nav_profile).setOnClickListener {
-            startActivity(Intent(this, PerfilActivity::class.java))
+            val intent = Intent(this, PerfilActivity::class.java)
+            intent.putExtra("usuario_id", usuarioId) // Pasar ID
+            startActivity(intent)
             finish()
         }
     }
+
 }

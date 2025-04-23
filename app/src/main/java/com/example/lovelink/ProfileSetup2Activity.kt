@@ -10,7 +10,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.lovelink.models.ImagenesUsuario
-import com.example.lovelink.models.Usuario
 import com.example.lovelink.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,12 +21,23 @@ class ProfileSetup2Activity : AppCompatActivity() {
     private lateinit var imageSlots: Array<ImageView>
     private lateinit var finishButton: Button
     private var currentSlotIndex = 0
-    private var usuarioId: Long = -1
+    private var usuarioId: Long = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_setup_2)
         supportActionBar?.hide()
+
+        // Recuperamos el ID del usuario del intent
+        usuarioId = intent.getLongExtra("usuario_id", -1)
+        if (usuarioId == -1L) {
+            Toast.makeText(this, "Error: ID de usuario no recibido", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+
+        Toast.makeText(this, "ID usuario recibido: $usuarioId", Toast.LENGTH_SHORT).show()
+
 
         imageSlots = arrayOf(
             findViewById(R.id.imageSlot1),
@@ -45,8 +55,6 @@ class ProfileSetup2Activity : AppCompatActivity() {
         }
 
         finishButton.setOnClickListener { subirImagenes() }
-
-        obtenerUltimoIdUsuario()
     }
 
     private fun openGalleryOrCamera(slotIndex: Int) {
@@ -109,32 +117,9 @@ class ProfileSetup2Activity : AppCompatActivity() {
         }
     }
 
-    private fun obtenerUltimoIdUsuario() {
-        RetrofitClient.usuarioService.obtenerUltimoUsuario()
-            .enqueue(object : Callback<Usuario> {
-            override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
-                if (response.isSuccessful) {
-                    usuarioId = response.body()?.id ?: -1
-
-                } else {
-                    Toast.makeText(this@ProfileSetup2Activity, "Error al obtener el usuario", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<Usuario>, t: Throwable) {
-                Toast.makeText(this@ProfileSetup2Activity, "Fallo al obtener usuario", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
     private fun subirImagenes() {
-        if (usuarioId == -1L) {
-            Toast.makeText(this, "ID de usuario no disponible", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         val imagenes = ImagenesUsuario(
-            id_usuario = usuarioId,
+            idUsuario = usuarioId,
             imagen1 = getRealPathFromURI(imageUris[0]),
             imagen2 = getRealPathFromURI(imageUris[1]),
             imagen3 = getRealPathFromURI(imageUris[2]),
@@ -147,17 +132,14 @@ class ProfileSetup2Activity : AppCompatActivity() {
             override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
                 if (response.isSuccessful) {
                     Toast.makeText(this@ProfileSetup2Activity, "Imágenes guardadas con éxito", Toast.LENGTH_SHORT).show()
-
-                    // Redirigir a PosiblesMatchesActivity y pasar el ID
                     val intent = Intent(this@ProfileSetup2Activity, PosiblesMatchesActivity::class.java)
                     intent.putExtra("usuario_id", usuarioId)
                     startActivity(intent)
-                    finish() // Opcional: cierra esta actividad
+                    finish()
                 } else {
                     Toast.makeText(this@ProfileSetup2Activity, "Error al guardar imágenes", Toast.LENGTH_SHORT).show()
                 }
             }
-
 
             override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
                 Toast.makeText(this@ProfileSetup2Activity, "Error de red", Toast.LENGTH_SHORT).show()

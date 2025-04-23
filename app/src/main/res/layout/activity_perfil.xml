@@ -119,16 +119,14 @@
             android:background="@drawable/rounded_edittext"
             android:padding="12dp" />
 
-        <!-- Aplicar Imagenes -->
         <Button
             android:id="@+id/apliButton1"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
             android:text="Aplicar cambios"
-            android:textAllCaps="false"
+            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:backgroundTint="@color/cyan_500"
             android:background="@drawable/rounded_button"
             android:layout_marginBottom="16dp"/>
 
@@ -279,41 +277,11 @@
             android:hint="Ciudad o municipio"
             android:layout_marginTop="8dp" />
 
-        <!-- Aplicar Imagenes -->
-        <Button
-            android:id="@+id/apliButton2"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="16dp"
-            android:text="Aplicar cambios"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/cyan_500"
-            android:background="@drawable/rounded_button"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Línea divisoria -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/white"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp" />
-
-
-        <!-- Título -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Información adicional"
-            android:textSize="24sp"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="24dp" />
-
         <!-- Orientación sexual -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="16dp"
             android:text="Orientación sexual"
             android:textColor="@android:color/white" />
 
@@ -327,17 +295,17 @@
 
             <TextView
                 android:id="@+id/orientationHetero"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="Heterosexual" />
 
             <TextView
                 android:id="@+id/orientationHomo"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="Homosexual" />
 
             <TextView
                 android:id="@+id/orientationBi"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="Bisexual" />
         </LinearLayout>
 
@@ -350,17 +318,17 @@
 
             <TextView
                 android:id="@+id/orientationPan"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="Pansexual" />
 
             <TextView
                 android:id="@+id/orientationAsexual"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="Asexual" />
 
             <TextView
                 android:id="@+id/orientationOt"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="Otro" />
         </LinearLayout>
 
@@ -382,9 +350,9 @@
             android:gravity="center"
             android:weightSum="3">
 
-            <TextView android:id="@+id/zodiacAries" style="@style/GenderOptionStyleMagenta" android:text="Aries" />
-            <TextView android:id="@+id/zodiacTaurus" style="@style/GenderOptionStyleMagenta" android:text="Tauro" />
-            <TextView android:id="@+id/zodiacGemini" style="@style/GenderOptionStyleMagenta" android:text="Géminis" />
+            <TextView android:id="@+id/zodiacAries" style="@style/GenderOptionStyle" android:text="Aries" />
+            <TextView android:id="@+id/zodiacTaurus" style="@style/GenderOptionStyle" android:text="Tauro" />
+            <TextView android:id="@+id/zodiacGemini" style="@style/GenderOptionStyle" android:text="Géminis" />
         </LinearLayout>
 
         <LinearLayout
@@ -395,9 +363,9 @@
             android:gravity="center"
             android:weightSum="3">
 
-            <TextView android:id="@+id/zodiacCancer" style="@style/GenderOptionStyleMagenta" android:text="Cáncer" />
-            <TextView android:id="@+id/zodiacLeo" style="@style/GenderOptionStyleMagenta" android:text="Leo" />
-            <TextView android:id="@+id/zodiacVirgo" style="@style/GenderOptionStyleMagenta" android:text="Virgo" />
+            <TextView android:id="@+id/zodiacCancer" style="@style/GenderOptionStyle" android:text="Cáncer" />
+            <TextView android:id="@+id/zodiacLeo" style="@style/GenderOptionStyle" android:text="Leo" />
+            <TextView android:id="@+id/zodiacVirgo" style="@style/GenderOptionStyle" android:text="Virgo" />
         </LinearLayout>
 
         <LinearLayout
@@ -408,9 +376,9 @@
             android:gravity="center"
             android:weightSum="3">
 
-            <TextView android:id="@+id/zodiacLibra" style="@style/GenderOptionStyleMagenta" android:text="Libra" />
-            <TextView android:id="@+id/zodiacScorpio" style="@style/GenderOptionStyleMagenta" android:text="Escorpio" />
-            <TextView android:id="@+id/zodiacSagittarius" style="@style/GenderOptionStyleMagenta" android:text="Sagitario" />
+            <TextView android:id="@+id/zodiacLibra" style="@style/GenderOptionStyle" android:text="Libra" />
+            <TextView android:id="@+id/zodiacScorpio" style="@style/GenderOptionStyle" android:text="Escorpio" />
+            <TextView android:id="@+id/zodiacSagittarius" style="@style/GenderOptionStyle" android:text="Sagitario" />
         </LinearLayout>
 
         <LinearLayout
@@ -421,9 +389,9 @@
             android:gravity="center"
             android:weightSum="3">
 
-            <TextView android:id="@+id/zodiacCapricorn" style="@style/GenderOptionStyleMagenta" android:text="Capricornio" />
-            <TextView android:id="@+id/zodiacAquarius" style="@style/GenderOptionStyleMagenta" android:text="Acuario" />
-            <TextView android:id="@+id/zodiacPisces" style="@style/GenderOptionStyleMagenta" android:text="Piscis" />
+            <TextView android:id="@+id/zodiacCapricorn" style="@style/GenderOptionStyle" android:text="Capricornio" />
+            <TextView android:id="@+id/zodiacAquarius" style="@style/GenderOptionStyle" android:text="Acuario" />
+            <TextView android:id="@+id/zodiacPisces" style="@style/GenderOptionStyle" android:text="Piscis" />
         </LinearLayout>
 
         <!-- Altura -->
@@ -445,18 +413,18 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="56dp"
-                android:background="@drawable/rounded_edittext2"
+                android:background="@drawable/rounded_edittext"
                 android:hint="Ej: 170"
                 android:inputType="number"
                 android:padding="16dp"
-                android:textColor="@color/magenta_500"
-                android:textColorHint="@color/magenta_500" />
+                android:textColor="@color/cyan_500"
+                android:textColorHint="@color/cyan_500" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="56dp"
                 android:text="cm"
-                android:textColor="@color/magenta_500"
+                android:textColor="@color/cyan_500"
                 android:gravity="center_vertical"
                 android:paddingStart="12dp"
                 android:textSize="16sp" />
@@ -482,12 +450,12 @@
 
             <TextView
                 android:id="@+id/intentionRelationship"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="Relación seria" />
 
             <TextView
                 android:id="@+id/intentionCasual"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="Algo casual" />
         </LinearLayout>
 
@@ -501,23 +469,23 @@
 
             <TextView
                 android:id="@+id/intentionFriendship"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="Amistad" />
 
             <TextView
                 android:id="@+id/intentionUnknown"
-                style="@style/GenderOptionStyleMagenta"
+                style="@style/GenderOptionStyle"
                 android:text="No lo sé aún" />
         </LinearLayout>
         <!-- Aplicar Imagenes -->
         <Button
-            android:id="@+id/apliButton3"
+            android:id="@+id/apliButton2"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
             android:text="Aplicar cambios"
-            android:textAllCaps="false"
+            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:backgroundTint="@color/magenta_500"
             android:background="@drawable/rounded_button"
             android:layout_marginBottom="16dp"/>
 
@@ -540,7 +508,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Añade hasta 6 imagenes"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp"/>
 
         <!-- Galería de 6 imágenes -->
         <LinearLayout
@@ -564,7 +533,7 @@
                     android:layout_height="175dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_edittext2"
+                    android:background="@drawable/rounded_edittext"
                     android:scaleType="centerCrop"
                     android:src="@drawable/fotos"
                     android:padding="12dp"
@@ -577,7 +546,7 @@
                     android:layout_height="175dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_edittext2"
+                    android:background="@drawable/rounded_edittext"
                     android:scaleType="centerCrop"
                     android:src="@drawable/fotos"
                     android:padding="12dp"
@@ -589,7 +558,7 @@
                     android:layout_width="0dp"
                     android:layout_height="175dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_edittext2"
+                    android:background="@drawable/rounded_edittext"
                     android:scaleType="centerCrop"
                     android:src="@drawable/fotos"
                     android:padding="12dp"
@@ -609,7 +578,7 @@
                     android:layout_height="175dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_edittext2"
+                    android:background="@drawable/rounded_edittext"
                     android:scaleType="centerCrop"
                     android:src="@drawable/fotos"
                     android:padding="12dp"
@@ -622,7 +591,7 @@
                     android:layout_height="175dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_edittext2"
+                    android:background="@drawable/rounded_edittext"
                     android:scaleType="centerCrop"
                     android:src="@drawable/fotos"
                     android:padding="12dp"
@@ -634,7 +603,7 @@
                     android:layout_width="0dp"
                     android:layout_height="175dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_edittext2"
+                    android:background="@drawable/rounded_edittext"
                     android:scaleType="centerCrop"
                     android:src="@drawable/fotos"
                     android:padding="12dp"
@@ -644,26 +613,26 @@
         </LinearLayout>
         <!-- Aplicar Imagenes -->
         <Button
-            android:id="@+id/apliButton4"
+            android:id="@+id/apliButton3"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
             android:text="Aplicar cambios"
-            android:textAllCaps="false"
+            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:backgroundTint="@color/magenta_500"
             android:background="@drawable/rounded_button"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp" />
 
         <!-- Cerrar sesion -->
         <Button
             android:id="@+id/closeButton"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Cerrar sesión"
-            android:textAllCaps="false"
+            android:layout_height="50dp"
+            android:text="Cerrar sesion"
+            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:backgroundTint="@color/pink_500"
-            android:background="@drawable/rounded_button" />
+            android:background="@drawable/rounded_button"
+            android:layout_marginBottom="16dp"/>
 
         <!-- Espacio para evitar que la barra tape el contenido -->
         <View

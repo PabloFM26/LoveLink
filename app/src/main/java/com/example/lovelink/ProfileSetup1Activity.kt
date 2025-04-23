@@ -4,10 +4,10 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.*
 import androidx.core.content.ContextCompat
-import com.example.lovelink.models.Cuenta
 import com.example.lovelink.models.Usuario
 import com.example.lovelink.network.RetrofitClient
 import retrofit2.Call
@@ -35,7 +35,7 @@ class ProfileSetup1Activity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_setup_1)
 
-        obtenerUltimoIdCuenta()
+        cuentaId = intent.getLongExtra("cuenta_id", -1L)
 
         nameEditText = findViewById(R.id.nameEditText)
         surnameEditText = findViewById(R.id.surnameEditText)
@@ -44,79 +44,7 @@ class ProfileSetup1Activity : Activity() {
         heightEditText = findViewById(R.id.heightEditText)
         val continueButton = findViewById<Button>(R.id.continueButton)
 
-        val genderOptions = arrayOf(
-            findViewById<TextView>(R.id.genderMale),
-            findViewById<TextView>(R.id.genderFemale),
-            findViewById<TextView>(R.id.genderOther),
-            findViewById<TextView>(R.id.genderNoSay)
-        )
-        genderOptions.forEach { genderView ->
-            genderView.setOnClickListener {
-                genderOptions.forEach {
-                    it.isSelected = false
-                    it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
-                }
-                genderView.isSelected = true
-                genderView.setTextColor(ContextCompat.getColor(this, R.color.gender_selected))
-                selectedGender = genderView.text.toString()
-            }
-        }
-
-        val orientationOptions = arrayOf(
-            findViewById<TextView>(R.id.orientationHetero),
-            findViewById<TextView>(R.id.orientationHomo),
-            findViewById<TextView>(R.id.orientationBi),
-            findViewById<TextView>(R.id.orientationPan),
-            findViewById<TextView>(R.id.orientationAsexual),
-            findViewById<TextView>(R.id.orientationOt)
-        )
-        orientationOptions.forEach { view ->
-            view.setOnClickListener {
-                orientationOptions.forEach {
-                    it.isSelected = false
-                    it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
-                }
-                view.isSelected = true
-                view.setTextColor(ContextCompat.getColor(this, R.color.gender_selected))
-                selectedOrientation = view.text.toString()
-            }
-        }
-
-        val zodiacOptions = arrayOf(
-            findViewById<TextView>(R.id.zodiacAries), findViewById(R.id.zodiacTaurus), findViewById(R.id.zodiacGemini),
-            findViewById(R.id.zodiacCancer), findViewById(R.id.zodiacLeo), findViewById(R.id.zodiacVirgo),
-            findViewById(R.id.zodiacLibra), findViewById(R.id.zodiacScorpio), findViewById(R.id.zodiacSagittarius),
-            findViewById(R.id.zodiacCapricorn), findViewById(R.id.zodiacAquarius), findViewById(R.id.zodiacPisces)
-        )
-        zodiacOptions.forEach { view ->
-            view.setOnClickListener {
-                zodiacOptions.forEach {
-                    it.isSelected = false
-                    it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
-                }
-                view.isSelected = true
-                view.setTextColor(ContextCompat.getColor(this, R.color.gender_selected))
-                selectedZodiac = view.text.toString()
-            }
-        }
-
-        val intentionOptions = arrayOf(
-            findViewById<TextView>(R.id.intentionRelationship),
-            findViewById<TextView>(R.id.intentionCasual),
-            findViewById<TextView>(R.id.intentionFriendship),
-            findViewById<TextView>(R.id.intentionUnknown)
-        )
-        intentionOptions.forEach { view ->
-            view.setOnClickListener {
-                intentionOptions.forEach {
-                    it.isSelected = false
-                    it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
-                }
-                view.isSelected = true
-                view.setTextColor(ContextCompat.getColor(this, R.color.gender_selected))
-                selectedIntention = view.text.toString()
-            }
-        }
+        configurarSelectores()
 
         birthdayEditText.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -170,13 +98,24 @@ class ProfileSetup1Activity : Activity() {
 
             RetrofitClient.usuarioService.crearUsuario(usuario).enqueue(object : Callback<Usuario> {
                 override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
-                    if (response.isSuccessful) {
-                        val usuarioCreado = response.body()
-                        Toast.makeText(this@ProfileSetup1Activity, "Datos guardados", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@ProfileSetup1Activity, ProfileSetup2Activity::class.java).apply {
-                            putExtra("usuarioId", usuarioCreado?.id ?: -1)
+                    if (response.isSuccessful && response.body() != null) {
+                        val usuarioCreado = response.body()!!
+                        val usuarioId = usuarioCreado.id
+
+                        if (usuarioId != null && usuarioId > 0) {
+                            Toast.makeText(this@ProfileSetup1Activity, "Datos guardados", Toast.LENGTH_SHORT).show()
+
+                            Handler(mainLooper).postDelayed({
+                                val intent = Intent(this@ProfileSetup1Activity, ProfileSetup2Activity::class.java).apply {
+                                    putExtra("usuario_id", usuarioId)
+                                }
+                                startActivity(intent)
+                                finish()
+                            }, 15000) // Espera 500ms para que MySQL respire
+                        } else {
+                            Toast.makeText(this@ProfileSetup1Activity, "ID de usuario no válido", Toast.LENGTH_SHORT).show()
+                            Log.e("Perfil", "ID de usuario inválido: $usuarioId")
                         }
-                        startActivity(intent)
                     } else {
                         Toast.makeText(this@ProfileSetup1Activity, "Error al guardar datos", Toast.LENGTH_SHORT).show()
                         Log.e("Perfil", "Error: ${response.code()} - ${response.errorBody()?.string()}")
@@ -188,26 +127,45 @@ class ProfileSetup1Activity : Activity() {
                     Log.e("Perfil", "Error de red", t)
                 }
             })
+
+
         }
     }
 
-    private fun obtenerUltimoIdCuenta() {
-        RetrofitClient.cuentaService.obtenerUltimaCuenta().enqueue(object : Callback<Cuenta> {
-            override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
-                if (response.isSuccessful) {
-                    val cuenta = response.body()
-                    cuentaId = (cuenta?.id ?: -1).toLong()
-                    Log.d("ProfileSetup", "\u00daltima cuenta ID: $cuentaId")
-                } else {
-                    Toast.makeText(this@ProfileSetup1Activity, "Error al obtener la cuenta", Toast.LENGTH_SHORT).show()
-                    Log.e("ProfileSetup", "C\u00f3digo: ${response.code()} - ${response.errorBody()?.string()}")
-                }
-            }
+    private fun configurarSelectores() {
+        val genderOptions = listOf(
+            R.id.genderMale, R.id.genderFemale, R.id.genderOther, R.id.genderNoSay
+        )
+        val orientationOptions = listOf(
+            R.id.orientationHetero, R.id.orientationHomo, R.id.orientationBi,
+            R.id.orientationPan, R.id.orientationAsexual, R.id.orientationOt
+        )
+        val zodiacOptions = listOf(
+            R.id.zodiacAries, R.id.zodiacTaurus, R.id.zodiacGemini, R.id.zodiacCancer,
+            R.id.zodiacLeo, R.id.zodiacVirgo, R.id.zodiacLibra, R.id.zodiacScorpio,
+            R.id.zodiacSagittarius, R.id.zodiacCapricorn, R.id.zodiacAquarius, R.id.zodiacPisces
+        )
+        val intentionOptions = listOf(
+            R.id.intentionRelationship, R.id.intentionCasual,
+            R.id.intentionFriendship, R.id.intentionUnknown
+        )
 
-            override fun onFailure(call: Call<Cuenta>, t: Throwable) {
-                Toast.makeText(this@ProfileSetup1Activity, "Error de red al obtener cuenta", Toast.LENGTH_SHORT).show()
-                Log.e("ProfileSetup", "Error de red", t)
+        setupTextSelector(genderOptions) { selectedGender = it }
+        setupTextSelector(orientationOptions) { selectedOrientation = it }
+        setupTextSelector(zodiacOptions) { selectedZodiac = it }
+        setupTextSelector(intentionOptions) { selectedIntention = it }
+    }
+
+    private fun setupTextSelector(ids: List<Int>, onSelected: (String) -> Unit) {
+        val views = ids.map { findViewById<TextView>(it) }
+        views.forEach { view ->
+            view.setOnClickListener {
+                views.forEach {
+                    it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
+                }
+                view.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected_text))
+                onSelected(view.text.toString())
             }
-        })
+        }
     }
 }
