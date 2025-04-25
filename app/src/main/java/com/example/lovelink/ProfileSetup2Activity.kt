@@ -1,14 +1,20 @@
 package com.example.lovelink
 
+import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.lovelink.models.ImagenesUsuario
 import com.example.lovelink.network.RetrofitClient
 import retrofit2.Call
@@ -23,21 +29,19 @@ class ProfileSetup2Activity : AppCompatActivity() {
     private var currentSlotIndex = 0
     private var usuarioId: Long = -1L
 
+    private var currentPhotoUri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_setup_2)
         supportActionBar?.hide()
 
-        // Recuperamos el ID del usuario del intent
-        usuarioId = intent.getLongExtra("usuario_id", -1)
+        usuarioId = intent.getLongExtra("usuario_id", -1L)
         if (usuarioId == -1L) {
             Toast.makeText(this, "Error: ID de usuario no recibido", Toast.LENGTH_LONG).show()
             finish()
             return
         }
-
-        Toast.makeText(this, "ID usuario recibido: $usuarioId", Toast.LENGTH_SHORT).show()
-
 
         imageSlots = arrayOf(
             findViewById(R.id.imageSlot1),
@@ -51,99 +55,102 @@ class ProfileSetup2Activity : AppCompatActivity() {
         finishButton = findViewById(R.id.finishButton)
 
         imageSlots.forEachIndexed { index, imageView ->
-            imageView.setOnClickListener { openGalleryOrCamera(index) }
+            imageView.setOnClickListener {
+                currentSlotIndex = index
+                showImageSourceDialog()
+            }
         }
 
         finishButton.setOnClickListener { subirImagenes() }
+        checkPermissions()
     }
 
-    private fun openGalleryOrCamera(slotIndex: Int) {
+    private fun showImageSourceDialog() {
         val options = arrayOf("Tomar foto", "Seleccionar de la galería")
         AlertDialog.Builder(this)
             .setTitle("Selecciona una opción")
             .setItems(options) { _, which ->
-                if (which == 0) openCamera(slotIndex)
-                else openGallery(slotIndex)
+                if (which == 0) openCamera()
+                else openGallery()
             }.show()
     }
 
-    private fun openCamera(slotIndex: Int) {
-        val photoUri = createImageUri()
-        imageUris[slotIndex] = photoUri
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-        currentSlotIndex = slotIndex
-        cameraActivityResultLauncher.launch(intent)
-    }
-
-    private fun openGallery(slotIndex: Int) {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        currentSlotIndex = slotIndex
-        galleryActivityResultLauncher.launch(intent)
-    }
-
-    private fun createImageUri(): Uri? {
+    private fun openCamera() {
         val values = ContentValues().apply {
-            put(MediaStore.Images.Media.TITLE, "ProfileImage")
+            put(MediaStore.Images.Media.TITLE, "Imagen de perfil")
         }
-        return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        currentPhotoUri = uri
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+            putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        }
+        cameraLauncher.launch(intent)
     }
 
-    private fun getRealPathFromURI(contentUri: Uri?): String? {
-        contentUri ?: return null
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        contentResolver.query(contentUri, proj, null, null, null)?.use { cursor ->
-            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor.moveToFirst()
-            return cursor.getString(columnIndex)
-        }
-        return null
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        galleryLauncher.launch(intent)
     }
 
-    private val cameraActivityResultLauncher = registerForActivityResult(
+    private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        if (it.resultCode == RESULT_OK) {
-            imageSlots[currentSlotIndex].setImageURI(imageUris[currentSlotIndex])
+        if (it.resultCode == RESULT_OK && currentPhotoUri != null) {
+            imageUris[currentSlotIndex] = currentPhotoUri
+            Glide.with(this).load(currentPhotoUri).into(imageSlots[currentSlotIndex])
         }
     }
 
-    private val galleryActivityResultLauncher = registerForActivityResult(
+    private val galleryLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            imageUris[currentSlotIndex] = result.data?.data
-            imageSlots[currentSlotIndex].setImageURI(imageUris[currentSlotIndex])
+            val uri = result.data?.data
+            imageUris[currentSlotIndex] = uri
+            Glide.with(this).load(uri).into(imageSlots[currentSlotIndex])
         }
     }
 
     private fun subirImagenes() {
         val imagenes = ImagenesUsuario(
             idUsuario = usuarioId,
-            imagen1 = getRealPathFromURI(imageUris[0]),
-            imagen2 = getRealPathFromURI(imageUris[1]),
-            imagen3 = getRealPathFromURI(imageUris[2]),
-            imagen4 = getRealPathFromURI(imageUris[3]),
-            imagen5 = getRealPathFromURI(imageUris[4]),
-            imagen6 = getRealPathFromURI(imageUris[5])
+            imagen1 = imageUris.getOrNull(0)?.toString(),
+            imagen2 = imageUris.getOrNull(1)?.toString(),
+            imagen3 = imageUris.getOrNull(2)?.toString(),
+            imagen4 = imageUris.getOrNull(3)?.toString(),
+            imagen5 = imageUris.getOrNull(4)?.toString(),
+            imagen6 = imageUris.getOrNull(5)?.toString()
         )
 
         RetrofitClient.imagenesUsuarioService.subirImagenes(imagenes).enqueue(object : Callback<ImagenesUsuario> {
             override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(this@ProfileSetup2Activity, "Imágenes guardadas con éxito", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ProfileSetup2Activity, "Imágenes guardadas", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this@ProfileSetup2Activity, PosiblesMatchesActivity::class.java)
                     intent.putExtra("usuario_id", usuarioId)
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this@ProfileSetup2Activity, "Error al guardar imágenes", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ProfileSetup2Activity, "Error al guardar", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
-                Toast.makeText(this@ProfileSetup2Activity, "Error de red", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ProfileSetup2Activity, "Fallo de red", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun checkPermissions() {
+        val permissions = mutableListOf<String>()
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                permissions.add(Manifest.permission.CAMERA)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        if (permissions.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, permissions.toTypedArray(), 100)
+        }
     }
 }

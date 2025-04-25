@@ -45,9 +45,6 @@
             android:name=".ProfileSetup2Activity"
             android:exported="true" />
         <activity
-            android:name=".ProfileSetup3Activity"
-            android:exported="true" />
-        <activity
             android:name=".MainActivity"
             android:exported="true" />
         <activity

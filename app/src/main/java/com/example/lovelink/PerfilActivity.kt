@@ -1,6 +1,5 @@
 package com.example.lovelink
 
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -18,7 +17,6 @@ import com.example.lovelink.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 class PerfilActivity : AppCompatActivity() {
 
@@ -57,6 +55,10 @@ class PerfilActivity : AppCompatActivity() {
         cityEditText = findViewById(R.id.cityEditText)
         heightEditText = findViewById(R.id.heightEditText)
 
+        birthdayEditText.isEnabled = false
+        birthdayEditText.isFocusable = false
+        birthdayEditText.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+
         imageSlots = arrayOf(
             findViewById(R.id.imageSlot1), findViewById(R.id.imageSlot2),
             findViewById(R.id.imageSlot3), findViewById(R.id.imageSlot4),
@@ -87,13 +89,6 @@ class PerfilActivity : AppCompatActivity() {
                 R.id.intentionFriendship, R.id.intentionUnknown)
         ) { selectedIntention = it }
 
-        birthdayEditText.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            DatePickerDialog(this, { _, year, month, day ->
-                birthdayEditText.setText("$day/${month + 1}/$year")
-            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
-        }
-
         configurarNavegacionInferior()
         cargarDatosUsuario()
         cargarImagenesUsuario()
@@ -108,6 +103,7 @@ class PerfilActivity : AppCompatActivity() {
                     surnameEditText.setText(usuario.apellidos)
                     cityEditText.setText(usuario.localidad)
                     heightEditText.setText(usuario.altura?.toString() ?: "")
+                    birthdayEditText.setText(usuario.edad?.toString() ?: "")
                     seleccionarTexto(usuario.genero, usuario.orientacionSexual, usuario.signoZodiaco, usuario.intencion)
                     cargarCuenta(usuario.id_cuenta)
                 }
@@ -143,8 +139,11 @@ class PerfilActivity : AppCompatActivity() {
                     imagenes?.imagen1, imagenes?.imagen2, imagenes?.imagen3,
                     imagenes?.imagen4, imagenes?.imagen5, imagenes?.imagen6
                 )
-                rutas.forEachIndexed { i, url ->
-                    if (!url.isNullOrEmpty()) Glide.with(this@PerfilActivity).load(url).into(imageSlots[i])
+                rutas.forEachIndexed { i, ruta ->
+                    if (!ruta.isNullOrEmpty()) {
+                        val uri = Uri.parse(ruta)
+                        Glide.with(this@PerfilActivity).load(uri).into(imageSlots[i])
+                    }
                 }
             }
 
@@ -153,6 +152,7 @@ class PerfilActivity : AppCompatActivity() {
             }
         })
     }
+
 
     private fun seleccionarTexto(genero: String?, orientacion: String?, zodiaco: String?, intencion: String?) {
         val activar = { ids: IntArray, valor: String? ->
@@ -239,8 +239,4 @@ class PerfilActivity : AppCompatActivity() {
                 updateImageSlot(imageUri, currentSlotIndex)
             }
         }
-
-    companion object {
-        private const val MAX_IMAGES = 6
-    }
 }

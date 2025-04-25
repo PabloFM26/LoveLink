@@ -35,15 +35,142 @@
             android:layout_height="140dp"
             android:src="@drawable/logo"
             android:layout_marginBottom="24dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tus imagenes"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Galería de 6 imágenes -->
+        <LinearLayout
+            android:id="@+id/imageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/imageSlot1"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:id="@+id/imageSlot2"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:id="@+id/imageSlot3"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_edittext"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:id="@+id/imageSlot4"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:id="@+id/imageSlot5"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:id="@+id/imageSlot6"
+                    android:layout_width="0dp"
+                    android:layout_height="175dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_edittext"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/fotos"
+                    android:padding="12dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- Aplicar Imagenes -->
+        <Button
+            android:id="@+id/apliButton1"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:text="Aplicar cambios"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp" />
 
         <!-- Título sección contacto -->
         <TextView
-            android:id="@+id/contactLabel"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Necesitamos poder contactar contigo"
+            android:text="Contacto"
+            android:textSize="24sp"
             android:textColor="@android:color/white"
-            android:layout_marginTop="24dp" />
+            android:layout_marginBottom="24dp" />
 
         <!-- Teléfono -->
         <EditText
@@ -71,14 +198,34 @@
             android:background="@drawable/rounded_edittext"
             android:padding="12dp" />
 
+        <!-- Boton aplicar contacto -->
+        <Button
+            android:id="@+id/apliButton2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:text="Aplicar cambios"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp" />
+
         <!-- Título sección seguridad -->
         <TextView
-            android:id="@+id/securityLabel"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Protege tu cuenta"
+            android:text="Cambiar contraseña"
+            android:textSize="24sp"
             android:textColor="@android:color/white"
-            android:layout_marginTop="24dp" />
+            android:layout_marginBottom="24dp" />
 
         <!-- Cambiar Contraseña -->
         <EditText
@@ -120,7 +267,7 @@
             android:padding="12dp" />
 
         <Button
-            android:id="@+id/apliButton1"
+            android:id="@+id/apliButton3"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
@@ -243,20 +390,21 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fecha de nacimiento"
+            android:text="Edad"
             android:textColor="@android:color/white" />
 
         <EditText
             android:id="@+id/birthdayEditText"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/rounded_edittext"
-            android:padding="16dp"
-            android:textColor="@color/cyan_500"
+            android:hint="Edad"
+            android:inputType="number"
+            android:layout_height="50dp"
+            android:maxLength="3"
             android:textColorHint="@color/cyan_500"
-            android:hint="dd/mm/aaaa"
-            android:focusable="false"
-            android:layout_marginTop="8dp" />
+            android:background="@drawable/rounded_edittext"
+            android:importantForAutofill="no"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"/>
 
         <!-- Label Localidad -->
         <TextView
@@ -479,7 +627,7 @@
         </LinearLayout>
         <!-- Aplicar Imagenes -->
         <Button
-            android:id="@+id/apliButton2"
+            android:id="@+id/apliButton4"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
@@ -496,132 +644,6 @@
             android:background="@color/white"
             android:layout_marginBottom="16dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Completa tu perfil"
-            android:textSize="24sp"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="24dp" />
-        <!-- Imagenes -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Añade hasta 6 imagenes"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Galería de 6 imágenes -->
-        <LinearLayout
-            android:id="@+id/imageContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginBottom="24dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                android:layout_marginBottom="8dp">
-
-                <ImageView
-                    android:id="@+id/imageSlot1"
-                    android:layout_width="0dp"
-                    android:layout_height="175dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_edittext"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/fotos"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-                <ImageView
-                    android:id="@+id/imageSlot2"
-                    android:layout_width="0dp"
-                    android:layout_height="175dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_edittext"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/fotos"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-                <ImageView
-                    android:id="@+id/imageSlot3"
-                    android:layout_width="0dp"
-                    android:layout_height="175dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_edittext"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/fotos"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <ImageView
-                    android:id="@+id/imageSlot4"
-                    android:layout_width="0dp"
-                    android:layout_height="175dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_edittext"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/fotos"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-                <ImageView
-                    android:id="@+id/imageSlot5"
-                    android:layout_width="0dp"
-                    android:layout_height="175dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_edittext"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/fotos"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-                <ImageView
-                    android:id="@+id/imageSlot6"
-                    android:layout_width="0dp"
-                    android:layout_height="175dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_edittext"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/fotos"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
-        </LinearLayout>
-        <!-- Aplicar Imagenes -->
-        <Button
-            android:id="@+id/apliButton3"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp"
-            android:text="Aplicar cambios"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:background="@drawable/rounded_button"
-            android:layout_marginBottom="16dp" />
 
         <!-- Cerrar sesion -->
         <Button
@@ -629,6 +651,17 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Cerrar sesion"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Cerrar sesion -->
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Borrar cuenta"
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:background="@drawable/rounded_button"

@@ -111,7 +111,7 @@ class ProfileSetup1Activity : Activity() {
                                 }
                                 startActivity(intent)
                                 finish()
-                            }, 15000) // Espera 500ms para que MySQL respire
+                            }, 500) // Espera 500ms para que MySQL respire
                         } else {
                             Toast.makeText(this@ProfileSetup1Activity, "ID de usuario no válido", Toast.LENGTH_SHORT).show()
                             Log.e("Perfil", "ID de usuario inválido: $usuarioId")
@@ -163,7 +163,8 @@ class ProfileSetup1Activity : Activity() {
                 views.forEach {
                     it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
                 }
-                view.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected_text))
+                view.setTextColor(ContextCompat.getColor(this, R.color.black))
+                view.setBackgroundResource(R.drawable.gender_selector_blue)
                 onSelected(view.text.toString())
             }
         }
