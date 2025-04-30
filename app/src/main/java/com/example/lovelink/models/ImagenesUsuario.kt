@@ -3,11 +3,12 @@ package com.example.lovelink.models
 import com.google.gson.annotations.SerializedName
 
 data class ImagenesUsuario(
+    @SerializedName("id_imagen") val idImagen: Long? = null,
     @SerializedName("id_usuario") val idUsuario: Long,
-    val imagen1: String?,
-    val imagen2: String?,
-    val imagen3: String?,
-    val imagen4: String?,
-    val imagen5: String?,
-    val imagen6: String?
+    var imagen1: String?,
+    var imagen2: String?,
+    var imagen3: String?,
+    var imagen4: String?,
+    var imagen5: String?,
+    var imagen6: String?
 )

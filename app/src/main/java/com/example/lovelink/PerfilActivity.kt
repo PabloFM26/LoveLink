@@ -21,6 +21,9 @@ import retrofit2.Response
 class PerfilActivity : AppCompatActivity() {
 
     private var usuarioId: Long = -1L
+    private var cuentaId: Long = -1L
+    private var imagenesId: Long = -1L
+
     private lateinit var phoneEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -92,6 +95,27 @@ class PerfilActivity : AppCompatActivity() {
         configurarNavegacionInferior()
         cargarDatosUsuario()
         cargarImagenesUsuario()
+
+        findViewById<Button>(R.id.apliButton2).setOnClickListener {
+            actualizarCorreo()
+        }
+        findViewById<Button>(R.id.apliButton3).setOnClickListener {
+            actualizarContrasena()
+        }
+        findViewById<Button>(R.id.apliButton4).setOnClickListener {
+            actualizarUsuario()
+        }
+        findViewById<Button>(R.id.closeButton).setOnClickListener {
+            cerrarSesion()
+        }
+        findViewById<Button>(R.id.deleteButton).setOnClickListener {
+            eliminarCuenta()
+        }
+        findViewById<Button>(R.id.apliButton1).setOnClickListener {
+            actualizarImagenes()
+        }
+
+
     }
 
     private fun cargarDatosUsuario() {
@@ -116,6 +140,8 @@ class PerfilActivity : AppCompatActivity() {
     }
 
     private fun cargarCuenta(idCuenta: Long) {
+        cuentaId = idCuenta
+
         RetrofitClient.cuentaService.obtenerCuentaPorId(idCuenta).enqueue(object : Callback<Cuenta> {
             override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
                 val cuenta = response.body()
@@ -124,34 +150,41 @@ class PerfilActivity : AppCompatActivity() {
                     phoneEditText.setText(cuenta.telefono)
                 }
             }
-
             override fun onFailure(call: Call<Cuenta>, t: Throwable) {
                 Toast.makeText(this@PerfilActivity, "Error cargando datos de cuenta", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
+
     private fun cargarImagenesUsuario() {
-        RetrofitClient.imagenesUsuarioService.getImagenesByUsuarioId(usuarioId).enqueue(object : Callback<ImagenesUsuario> {
-            override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
-                val imagenes = response.body()
-                val rutas = listOf(
-                    imagenes?.imagen1, imagenes?.imagen2, imagenes?.imagen3,
-                    imagenes?.imagen4, imagenes?.imagen5, imagenes?.imagen6
-                )
-                rutas.forEachIndexed { i, ruta ->
-                    if (!ruta.isNullOrEmpty()) {
-                        val uri = Uri.parse(ruta)
-                        Glide.with(this@PerfilActivity).load(uri).into(imageSlots[i])
+        RetrofitClient.imagenesUsuarioService.getImagenesByUsuarioId(usuarioId)
+            .enqueue(object : Callback<ImagenesUsuario> {
+                override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
+                    val imagenes = response.body()
+                    if (imagenes != null) {
+                        imagenesId = imagenes.idImagen ?: -1L
+                     }
+
+                    val rutas = listOf(
+                        imagenes?.imagen1, imagenes?.imagen2, imagenes?.imagen3,
+                        imagenes?.imagen4, imagenes?.imagen5, imagenes?.imagen6
+                    )
+                    rutas.forEachIndexed { i, ruta ->
+                        if (!ruta.isNullOrEmpty()) {
+                            val uri = Uri.parse(ruta)
+                            Glide.with(this@PerfilActivity).load(uri).into(imageSlots[i])
+                            imageSlots[i].tag = uri.toString() // Guardamos la ruta
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
-                Toast.makeText(this@PerfilActivity, "Error cargando imágenes", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
+                    Toast.makeText(this@PerfilActivity, "Error cargando imágenes", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
+
 
 
     private fun seleccionarTexto(genero: String?, orientacion: String?, zodiaco: String?, intencion: String?) {
@@ -183,12 +216,18 @@ class PerfilActivity : AppCompatActivity() {
     }
 
     private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+        }
         galleryActivityResultLauncher.launch(intent)
     }
 
     private fun updateImageSlot(uri: Uri?, index: Int) {
-        uri?.let { imageSlots[index].setImageURI(it) }
+        uri?.let {
+            imageSlots[index].setImageURI(it)
+            imageSlots[index].tag = it.toString() // 🛠 Añadimos el tag aquí también
+        }
     }
 
     private fun setupTextOptionSelectors(ids: List<Int>, onSelected: (String) -> Unit) {
@@ -236,7 +275,195 @@ class PerfilActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 val imageUri = result.data?.data
-                updateImageSlot(imageUri, currentSlotIndex)
+                if (imageUri != null) {
+                    contentResolver.takePersistableUriPermission(
+                        imageUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                    updateImageSlot(imageUri, currentSlotIndex)
+                }
             }
         }
+
+
+    private fun actualizarCorreo() {
+        val nuevoCorreo = emailEditText.text.toString().trim()
+
+        if (nuevoCorreo.isEmpty()) {
+            Toast.makeText(this, "El correo no puede estar vacío", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val emailUpdate = mapOf("email" to nuevoCorreo)
+
+        RetrofitClient.cuentaService.actualizarCorreo(cuentaId, emailUpdate)
+            .enqueue(object : Callback<Cuenta> {
+                override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@PerfilActivity, "Correo actualizado correctamente", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@PerfilActivity, "Error al actualizar correo", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Cuenta>, t: Throwable) {
+                    Toast.makeText(this@PerfilActivity, "Fallo de red", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+    private fun actualizarContrasena() {
+        val contrasenaActual = passwordEditText.text.toString().trim()
+        val nuevaContrasena = findViewById<EditText>(R.id.newPasswordEditText).text.toString().trim()
+        val repetirNuevaContrasena = password2EditText.text.toString().trim()
+
+        // Validaciones
+        if (contrasenaActual.isEmpty() || nuevaContrasena.isEmpty() || repetirNuevaContrasena.isEmpty()) {
+            Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (nuevaContrasena != repetirNuevaContrasena) {
+            Toast.makeText(this, "Las nuevas contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Ahora validamos que la contraseña actual sea correcta
+        RetrofitClient.cuentaService.obtenerCuentaPorId(cuentaId).enqueue(object : Callback<Cuenta> {
+            override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
+                if (response.isSuccessful) {
+                    val cuenta = response.body()
+                    if (cuenta != null && cuenta.password == contrasenaActual) {
+                        // Coincide, actualizar contraseña
+                        val passwordUpdate = mapOf("password" to nuevaContrasena)
+
+                        RetrofitClient.cuentaService.actualizarContrasena(cuentaId, passwordUpdate)
+                            .enqueue(object : Callback<Cuenta> {
+                                override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
+                                    if (response.isSuccessful) {
+                                        Toast.makeText(this@PerfilActivity, "Contraseña actualizada correctamente", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Toast.makeText(this@PerfilActivity, "Error al actualizar contraseña", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<Cuenta>, t: Throwable) {
+                                    Toast.makeText(this@PerfilActivity, "Fallo de red", Toast.LENGTH_SHORT).show()
+                                }
+                            })
+                    } else {
+                        Toast.makeText(this@PerfilActivity, "La contraseña actual no es correcta", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@PerfilActivity, "Error al comprobar la contraseña actual", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Cuenta>, t: Throwable) {
+                Toast.makeText(this@PerfilActivity, "Fallo de red", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun actualizarUsuario() {
+        val nombre = nameEditText.text.toString().trim()
+        val apellidos = surnameEditText.text.toString().trim()
+        val genero = selectedGender
+        val localidad = cityEditText.text.toString().trim()
+        val orientacionSexual = selectedOrientation
+        val signoZodiaco = selectedZodiac
+        val intencion = selectedIntention
+        val altura = heightEditText.text.toString().toIntOrNull()
+
+        if (nombre.isEmpty() || apellidos.isEmpty() || localidad.isEmpty() || altura == null) {
+            Toast.makeText(this, "Rellena todos los campos", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val usuarioActualizado = Usuario(
+            id = usuarioId,   // No se va a cambiar
+            id_cuenta = cuentaId,      // No se va a cambiar
+            nombre = nombre,
+            apellidos = apellidos,
+            genero = genero,
+            localidad = localidad,
+            edad = null,  // No tocamos edad
+            orientacionSexual = orientacionSexual,
+            signoZodiaco = signoZodiaco,
+            intencion = intencion,
+            altura = altura
+        )
+
+        RetrofitClient.usuarioService.actualizarUsuario(usuarioId, usuarioActualizado)
+            .enqueue(object : Callback<Usuario> {
+                override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@PerfilActivity, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@PerfilActivity, "Error al actualizar perfil", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Usuario>, t: Throwable) {
+                    Toast.makeText(this@PerfilActivity, "Fallo de red", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+    private fun cerrarSesion() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+    private fun eliminarCuenta() {
+        RetrofitClient.cuentaService.eliminarCuenta(cuentaId)
+            .enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@PerfilActivity, "Cuenta eliminada", Toast.LENGTH_SHORT).show()
+                        cerrarSesion() // Nos manda de nuevo al login
+                    } else {
+                        Toast.makeText(this@PerfilActivity, "Error al eliminar cuenta", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Toast.makeText(this@PerfilActivity, "Fallo de red", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    private fun actualizarImagenes() {
+        if (imagenesId == -1L) {
+            Toast.makeText(this, "Error: No se pudo obtener ID de imágenes", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val imagenesActualizadas = ImagenesUsuario(
+            idImagen = imagenesId,
+            idUsuario = usuarioId,
+            imagen1 = imageSlots.getOrNull(0)?.tag as? String,
+            imagen2 = imageSlots.getOrNull(1)?.tag as? String,
+            imagen3 = imageSlots.getOrNull(2)?.tag as? String,
+            imagen4 = imageSlots.getOrNull(3)?.tag as? String,
+            imagen5 = imageSlots.getOrNull(4)?.tag as? String,
+            imagen6 = imageSlots.getOrNull(5)?.tag as? String
+        )
+
+        RetrofitClient.imagenesUsuarioService.actualizarImagenes(imagenesId, imagenesActualizadas)
+            .enqueue(object : Callback<ImagenesUsuario> {
+                override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@PerfilActivity, "Imágenes actualizadas correctamente", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@PerfilActivity, "Error al actualizar imágenes", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
+                    Toast.makeText(this@PerfilActivity, "Fallo de red", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+
 }

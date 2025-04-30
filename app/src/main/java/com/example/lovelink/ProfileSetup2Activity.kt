@@ -62,7 +62,6 @@ class ProfileSetup2Activity : AppCompatActivity() {
         }
 
         finishButton.setOnClickListener { subirImagenes() }
-        checkPermissions()
     }
 
     private fun showImageSourceDialog() {
@@ -88,9 +87,13 @@ class ProfileSetup2Activity : AppCompatActivity() {
     }
 
     private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+        }
         galleryLauncher.launch(intent)
     }
+
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -106,20 +109,38 @@ class ProfileSetup2Activity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val uri = result.data?.data
-            imageUris[currentSlotIndex] = uri
-            Glide.with(this).load(uri).into(imageSlots[currentSlotIndex])
+            if (uri != null) {
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                imageUris[currentSlotIndex] = uri
+                Glide.with(this).load(uri).into(imageSlots[currentSlotIndex])
+            }
         }
     }
 
+
     private fun subirImagenes() {
+        // Validamos que todas las imágenes estén seleccionadas
+        val imagenesFaltantes = imageUris.withIndex().filter { it.value == null }.map { it.index + 1 }
+        if (imagenesFaltantes.isNotEmpty()) {
+            Toast.makeText(
+                this,
+                "Por favor, selecciona una imagen para todos los huecos (faltan: ${imagenesFaltantes.joinToString(", ")})",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
         val imagenes = ImagenesUsuario(
             idUsuario = usuarioId,
-            imagen1 = imageUris.getOrNull(0)?.toString(),
-            imagen2 = imageUris.getOrNull(1)?.toString(),
-            imagen3 = imageUris.getOrNull(2)?.toString(),
-            imagen4 = imageUris.getOrNull(3)?.toString(),
-            imagen5 = imageUris.getOrNull(4)?.toString(),
-            imagen6 = imageUris.getOrNull(5)?.toString()
+            imagen1 = imageUris[0]?.toString(),
+            imagen2 = imageUris[1]?.toString(),
+            imagen3 = imageUris[2]?.toString(),
+            imagen4 = imageUris[3]?.toString(),
+            imagen5 = imageUris[4]?.toString(),
+            imagen6 = imageUris[5]?.toString()
         )
 
         RetrofitClient.imagenesUsuarioService.subirImagenes(imagenes).enqueue(object : Callback<ImagenesUsuario> {
@@ -141,16 +162,4 @@ class ProfileSetup2Activity : AppCompatActivity() {
         })
     }
 
-    private fun checkPermissions() {
-        val permissions = mutableListOf<String>()
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                permissions.add(Manifest.permission.CAMERA)
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-        if (permissions.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, permissions.toTypedArray(), 100)
-        }
-    }
 }

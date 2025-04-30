@@ -37,5 +37,8 @@ object RetrofitClient {
     val imagenesUsuarioService: ImagenesUsuarioService by lazy {
         retrofit.create(ImagenesUsuarioService::class.java)
     }
+    val matchService: MatchService by lazy {
+        retrofit.create(MatchService::class.java)
+    }
 
 }

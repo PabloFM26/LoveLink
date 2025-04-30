@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName
 data class Usuario(
     @SerializedName("id") val id: Long? = null,
     val id_cuenta: Long,
-    val nombre: String?,
-    val apellidos: String?,
-    val genero: String?,
-    val localidad: String?,
+    var nombre: String?,
+    var apellidos: String?,
+    var genero: String?,
+    var localidad: String?,
     val edad: Int?,
-    val orientacionSexual: String?,
-    val signoZodiaco: String?,
-    val intencion: String?,
-    val altura: Int?
+    var orientacionSexual: String?,
+    var signoZodiaco: String?,
+    var intencion: String?,
+    var altura: Int?
 )
