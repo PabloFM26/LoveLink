@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="Añade tus imagenes"
             android:textColor="@android:color/white"
-            android:layout_marginTop="16dp" />
+            android:layout_marginBottom="16dp" />
 
 
         <!-- Galería de 6 imágenes -->

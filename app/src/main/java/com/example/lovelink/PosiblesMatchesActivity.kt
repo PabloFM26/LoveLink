@@ -266,17 +266,10 @@ class PosiblesMatchesActivity : Activity() {
             return
         }
 
-        val uri = when {
-            ruta.startsWith("/storage") -> Uri.parse("file://$ruta")
-            ruta.startsWith("content://") -> Uri.parse(ruta)
-            else -> Uri.parse(ruta)
-        }
-
         Glide.with(this)
-            .load(uri)
+            .load(ruta) // ← directamente la URL
             .into(imagenUsuario)
     }
-
 
     private fun darLike() {
         val usuarioLikeado = usuariosFiltrados[indiceActual]

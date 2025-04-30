@@ -1,25 +1,28 @@
 package com.example.lovelink
 
-import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.lovelink.models.ImagenesUsuario
 import com.example.lovelink.network.RetrofitClient
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
 
 class ProfileSetup2Activity : AppCompatActivity() {
 
@@ -28,7 +31,6 @@ class ProfileSetup2Activity : AppCompatActivity() {
     private lateinit var finishButton: Button
     private var currentSlotIndex = 0
     private var usuarioId: Long = -1L
-
     private var currentPhotoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,12 +46,9 @@ class ProfileSetup2Activity : AppCompatActivity() {
         }
 
         imageSlots = arrayOf(
-            findViewById(R.id.imageSlot1),
-            findViewById(R.id.imageSlot2),
-            findViewById(R.id.imageSlot3),
-            findViewById(R.id.imageSlot4),
-            findViewById(R.id.imageSlot5),
-            findViewById(R.id.imageSlot6)
+            findViewById(R.id.imageSlot1), findViewById(R.id.imageSlot2),
+            findViewById(R.id.imageSlot3), findViewById(R.id.imageSlot4),
+            findViewById(R.id.imageSlot5), findViewById(R.id.imageSlot6)
         )
 
         finishButton = findViewById(R.id.finishButton)
@@ -69,8 +68,7 @@ class ProfileSetup2Activity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Selecciona una opción")
             .setItems(options) { _, which ->
-                if (which == 0) openCamera()
-                else openGallery()
+                if (which == 0) openCamera() else openGallery()
             }.show()
     }
 
@@ -94,7 +92,6 @@ class ProfileSetup2Activity : AppCompatActivity() {
         galleryLauncher.launch(intent)
     }
 
-
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
@@ -109,57 +106,70 @@ class ProfileSetup2Activity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val uri = result.data?.data
-            if (uri != null) {
-                contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-                imageUris[currentSlotIndex] = uri
-                Glide.with(this).load(uri).into(imageSlots[currentSlotIndex])
+            uri?.let {
+                contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                imageUris[currentSlotIndex] = it
+                Glide.with(this).load(it).into(imageSlots[currentSlotIndex])
             }
         }
     }
 
+    private fun uriToFile(uri: Uri): File {
+        val inputStream = contentResolver.openInputStream(uri)
+            ?: throw IllegalArgumentException("URI inválido")
+        val file = File(cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
+        FileOutputStream(file).use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+        inputStream.close()
+        return file
+    }
 
     private fun subirImagenes() {
-        // Validamos que todas las imágenes estén seleccionadas
-        val imagenesFaltantes = imageUris.withIndex().filter { it.value == null }.map { it.index + 1 }
-        if (imagenesFaltantes.isNotEmpty()) {
-            Toast.makeText(
-                this,
-                "Por favor, selecciona una imagen para todos los huecos (faltan: ${imagenesFaltantes.joinToString(", ")})",
-                Toast.LENGTH_LONG
-            ).show()
+        val urls = MutableList(6) { "" }
+        var subidas = 0
+
+        val faltantes = imageUris.withIndex().filter { it.value == null }.map { it.index + 1 }
+        if (faltantes.isNotEmpty()) {
+            Toast.makeText(this, "Selecciona todas las imágenes (faltan: ${faltantes.joinToString()})", Toast.LENGTH_LONG).show()
             return
         }
 
-        val imagenes = ImagenesUsuario(
-            idUsuario = usuarioId,
-            imagen1 = imageUris[0]?.toString(),
-            imagen2 = imageUris[1]?.toString(),
-            imagen3 = imageUris[2]?.toString(),
-            imagen4 = imageUris[3]?.toString(),
-            imagen5 = imageUris[4]?.toString(),
-            imagen6 = imageUris[5]?.toString()
-        )
+        imageUris.forEachIndexed { index, uri ->
+            val file = uriToFile(uri!!)
+            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            val imagenPart = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-        RetrofitClient.imagenesUsuarioService.subirImagenes(imagenes).enqueue(object : Callback<ImagenesUsuario> {
-            override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(this@ProfileSetup2Activity, "Imágenes guardadas", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@ProfileSetup2Activity, PosiblesMatchesActivity::class.java)
-                    intent.putExtra("usuario_id", usuarioId)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this@ProfileSetup2Activity, "Error al guardar", Toast.LENGTH_SHORT).show()
+            val idUsuarioPart = usuarioId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            val numeroPart = (index + 1).toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+            RetrofitClient.imagenesUsuarioService.subirImagenIndividual(
+                imagenPart, idUsuarioPart, numeroPart
+            ).enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if (response.isSuccessful) {
+                        urls[index] = response.body()?.string().orEmpty()
+                        subidas++
+                        if (subidas == 6) {
+                            Toast.makeText(this@ProfileSetup2Activity, "Imágenes subidas correctamente", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this@ProfileSetup2Activity, PosiblesMatchesActivity::class.java).apply {
+                                putExtra("usuario_id", usuarioId)
+                            })
+                            finish()
+                        }
+                    } else {
+                        Toast.makeText(this@ProfileSetup2Activity, "Error al subir imagen ${index + 1}", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
-                Toast.makeText(this@ProfileSetup2Activity, "Fallo de red", Toast.LENGTH_SHORT).show()
-            }
-        })
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.e("UPLOAD_ERROR", "Fallo de red imagen ${index + 1}", t)
+                    Toast.makeText(this@ProfileSetup2Activity, "Fallo de red imagen ${index + 1}", Toast.LENGTH_SHORT).show()
+                }
+
+            })
+        }
     }
 
 }

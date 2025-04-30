@@ -1,25 +1,31 @@
 package com.example.lovelink.network
 
 import com.example.lovelink.models.ImagenesUsuario
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ImagenesUsuarioService {
-    @POST("api/imagenes")
-    fun subirImagenes(@Body imagenesUsuario: ImagenesUsuario): Call<ImagenesUsuario>
 
+    // Subida de imagen individual al servidor (uploads)
+    @Multipart
+    @POST("api/imagenes/upload")
+    fun subirImagenIndividual(
+        @Part file: MultipartBody.Part,
+        @Part("idUsuario") idUsuario: RequestBody,
+        @Part("numero") numero: RequestBody
+    ): Call<ResponseBody>
+
+    // Obtener imágenes por ID de usuario
     @GET("api/imagenes/usuario/{idUsuario}")
     fun getImagenesByUsuarioId(@Path("idUsuario") idUsuario: Long): Call<ImagenesUsuario>
 
-    @PUT("/api/imagenes/{id}")
+    // Actualizar imágenes existentes (si ya existe un registro)
+    @PUT("api/imagenes/{id}")
     fun actualizarImagenes(
         @Path("id") id: Long,
         @Body imagenes: ImagenesUsuario
     ): Call<ImagenesUsuario>
-
-
 }
