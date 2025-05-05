@@ -7,7 +7,7 @@
       </SelectionState>
       <SelectionState runConfigName="LoveLink">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-04-30T08:45:41.387811200Z">
+        <DropdownSelection timestamp="2025-04-30T16:00:34.643620100Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Pablo\.android\avd\Medium_Phone_API_35.avd" />

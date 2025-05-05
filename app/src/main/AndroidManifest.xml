@@ -60,6 +60,10 @@
         <activity
             android:name=".PerfilActivity"
             android:exported="true" />
+        <activity
+            android:name=".ConversacionActivity"
+            android:exported="true"/>
+
 
     </application>
 </manifest>

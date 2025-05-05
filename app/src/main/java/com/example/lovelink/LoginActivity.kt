@@ -26,6 +26,22 @@ class LoginActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+
+        // Comprobamos si elusuario ya ha iniciado sesión previamente
+        val prefs = getSharedPreferences("LoveLinkPrefs", MODE_PRIVATE)
+        val isLoggedIn = prefs.getBoolean("isLoggedIn", false)
+        val usuarioId = prefs.getLong("usuarioId", -1L)
+
+        if (isLoggedIn && usuarioId != -1L) {
+            val intent = Intent(this, PosiblesMatchesActivity::class.java)
+            intent.putExtra("usuario_id", usuarioId)
+            startActivity(intent)
+            finish()
+            return
+        }
+
+        setContentView(R.layout.activity_login)
+
         // Inicialización de vistas
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
@@ -41,6 +57,17 @@ class LoginActivity : Activity() {
                 Toast.makeText(this, "Por favor, ingresa correo y contraseña", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Correo no válido. Asegúrate de que incluya '@' y dominio.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (password.length < 6) {
+                Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
 
             val cuenta = Cuenta(email = email, password = password, telefono = "")
 

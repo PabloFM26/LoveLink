@@ -22,10 +22,14 @@ interface ImagenesUsuarioService {
     @GET("api/imagenes/usuario/{idUsuario}")
     fun getImagenesByUsuarioId(@Path("idUsuario") idUsuario: Long): Call<ImagenesUsuario>
 
-    // Actualizar imágenes existentes (si ya existe un registro)
-    @PUT("api/imagenes/{id}")
-    fun actualizarImagenes(
-        @Path("id") id: Long,
-        @Body imagenes: ImagenesUsuario
-    ): Call<ImagenesUsuario>
+    @Multipart
+    @PUT("api/imagenes/actualizar-slot")
+    fun actualizarImagenSlot(
+        @Part file: MultipartBody.Part,
+        @Part("idUsuario") idUsuario: RequestBody,
+        @Part("numero") numero: RequestBody
+    ): Call<ResponseBody>
+
+
+
 }

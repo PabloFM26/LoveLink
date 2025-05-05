@@ -8,7 +8,7 @@
     android:elevation="2dp">
 
     <ImageView
-        android:id="@+id/matchImagen"
+        android:id="@+id/chatImagen"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginEnd="12dp"
@@ -17,35 +17,18 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/matchNombreEdad"
+            android:id="@+id/chatNombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre, Edad"
+            android:text="Nombre"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/matchLocalidad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Localidad"
-            android:textColor="@color/black" />
+            android:textColor="@android:color/white" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnChatMatch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="💬"
-        android:textSize="20sp"
-        android:layout_gravity="center_vertical"
-        android:background="@android:color/transparent"
-        android:contentDescription="Enviar mensaje" />
 </LinearLayout>

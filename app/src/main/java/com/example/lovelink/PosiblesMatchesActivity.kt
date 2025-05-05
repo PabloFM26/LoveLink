@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.*
 import android.net.Uri
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.lovelink.models.ImagenesUsuario
 import com.example.lovelink.models.Match
 import com.example.lovelink.models.Usuario
@@ -145,12 +146,20 @@ class PosiblesMatchesActivity : Activity() {
         usuarios.forEach { candidato ->
             if (esCompatible(miPerfil!!, candidato)) {
                 usuariosFiltrados.add(candidato)
-                cargarImagenesUsuario(candidato.id!!)
             }
         }
 
         usuariosFiltrados.shuffle()
-        mostrarUsuarioActual()
+
+        if (usuariosFiltrados.isEmpty()) {
+            mostrarUsuarioActual()
+            return
+        }
+
+        val primerUsuario = usuariosFiltrados[0]
+        cargarImagenesUsuario(primerUsuario.id!!) {
+            mostrarUsuarioActual()
+        }
     }
 
     private fun esCompatible(yo: Usuario, candidato: Usuario): Boolean {
@@ -187,7 +196,7 @@ class PosiblesMatchesActivity : Activity() {
     }
 
 
-    private fun cargarImagenesUsuario(idUsuario: Long) {
+    private fun cargarImagenesUsuario(idUsuario: Long, onComplete: (() -> Unit)? = null) {
         RetrofitClient.imagenesUsuarioService.getImagenesByUsuarioId(idUsuario)
             .enqueue(object : Callback<ImagenesUsuario> {
                 override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
@@ -203,13 +212,15 @@ class PosiblesMatchesActivity : Activity() {
                         )
                         imagenesUsuarios[idUsuario] = listaImagenes
                     }
+                    onComplete?.invoke()
                 }
 
                 override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
-
+                    onComplete?.invoke()
                 }
             })
     }
+
 
 
     private fun mostrarUsuarioActual() {
@@ -267,9 +278,12 @@ class PosiblesMatchesActivity : Activity() {
         }
 
         Glide.with(this)
-            .load(ruta) // ← directamente la URL
+            .load(ruta)
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(imagenUsuario)
     }
+
 
     private fun darLike() {
         val usuarioLikeado = usuariosFiltrados[indiceActual]

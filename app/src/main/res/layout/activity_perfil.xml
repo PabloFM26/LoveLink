@@ -143,17 +143,6 @@
                     android:focusable="true" />
             </LinearLayout>
         </LinearLayout>
-        <!-- Aplicar Imagenes -->
-        <Button
-            android:id="@+id/apliButton1"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp"
-            android:text="Aplicar cambios"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:background="@drawable/rounded_button"
-            android:layout_marginBottom="16dp" />
 
         <!-- Línea divisoria -->
         <View

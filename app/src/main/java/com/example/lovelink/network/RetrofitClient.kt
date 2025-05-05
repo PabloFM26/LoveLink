@@ -40,5 +40,11 @@ object RetrofitClient {
     val matchService: MatchService by lazy {
         retrofit.create(MatchService::class.java)
     }
+    val chatService: ChatService by lazy {
+        retrofit.create(ChatService::class.java)
+    }
+    val mensajeService: MensajeService by lazy {
+        retrofit.create(MensajeService::class.java)
+    }
 
 }

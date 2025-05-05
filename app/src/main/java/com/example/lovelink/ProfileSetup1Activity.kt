@@ -83,6 +83,17 @@ class ProfileSetup1Activity : Activity() {
                 return@setOnClickListener
             }
 
+            if (userAge < 18) {
+                Toast.makeText(this, "Debes tener al menos 18 años para usar la app", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (height < 100 || height > 250) {
+                Toast.makeText(this, "La altura debe estar entre 1.00 m y 2.50 m", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+
             val usuario = Usuario(
                 id_cuenta = cuentaId,
                 nombre = name,

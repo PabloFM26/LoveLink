@@ -4,7 +4,36 @@
     android:layout_height="match_parent"
     android:background="@color/dark_blue_900">
 
-    <!-- Texto centrado (ahora justo encima de la barra) -->
+    <!-- Título fijo en la parte superior -->
+    <TextView
+        android:id="@+id/matchesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Conversaciones"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/yellow_500"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <!-- Contenedor con Scroll para los ítems de chat -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/matchesTitle"
+        android:layout_above="@id/bottomNavigation"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:id="@+id/chatsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp" />
+    </ScrollView>
+
+    <!-- Texto informativo (aparece si no hay chats) -->
     <TextView
         android:id="@+id/chatText"
         android:layout_width="wrap_content"
@@ -14,9 +43,10 @@
         android:textColor="@android:color/white"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/bottomNavigation"
-        android:layout_marginBottom="32dp" />
+        android:layout_marginBottom="32dp"
+        android:visibility="gone" />
 
-    <!-- Barra de navegación inferior fija sin padding ni margen -->
+    <!-- Barra de navegación inferior -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"

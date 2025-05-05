@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.lovelink.models.ImagenesUsuario
 import com.example.lovelink.models.Usuario
 import com.example.lovelink.models.Cuenta
@@ -17,6 +18,12 @@ import com.example.lovelink.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+
 
 class PerfilActivity : AppCompatActivity() {
 
@@ -60,7 +67,11 @@ class PerfilActivity : AppCompatActivity() {
 
         birthdayEditText.isEnabled = false
         birthdayEditText.isFocusable = false
-        birthdayEditText.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+        birthdayEditText.setTextColor(ContextCompat.getColor(this, R.color.cyan_500))
+        phoneEditText.isEnabled = false
+        phoneEditText.isFocusable = false
+        phoneEditText.setTextColor(ContextCompat.getColor(this, R.color.cyan_500))
+
 
         imageSlots = arrayOf(
             findViewById(R.id.imageSlot1), findViewById(R.id.imageSlot2),
@@ -111,10 +122,6 @@ class PerfilActivity : AppCompatActivity() {
         findViewById<Button>(R.id.deleteButton).setOnClickListener {
             eliminarCuenta()
         }
-        findViewById<Button>(R.id.apliButton1).setOnClickListener {
-            actualizarImagenes()
-        }
-
 
     }
 
@@ -173,8 +180,12 @@ class PerfilActivity : AppCompatActivity() {
                     rutas.forEachIndexed { i, ruta ->
                         if (!ruta.isNullOrEmpty()) {
                             val uri = Uri.parse(ruta)
-                            Glide.with(this@PerfilActivity).load(uri).into(imageSlots[i])
-                            imageSlots[i].tag = uri.toString() // Guardamos la ruta
+                            Glide.with(this@PerfilActivity)
+                                .load(uri)
+                                .skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .into(imageSlots[i])
+                            imageSlots[i].tag = uri.toString()
                         }
                     }
                 }
@@ -223,12 +234,6 @@ class PerfilActivity : AppCompatActivity() {
         galleryActivityResultLauncher.launch(intent)
     }
 
-    private fun updateImageSlot(uri: Uri?, index: Int) {
-        uri?.let {
-            imageSlots[index].setImageURI(it)
-            imageSlots[index].tag = it.toString() // 🛠 Añadimos el tag aquí también
-        }
-    }
 
     private fun setupTextOptionSelectors(ids: List<Int>, onSelected: (String) -> Unit) {
         val views = ids.map { findViewById<TextView>(it) }
@@ -288,6 +293,10 @@ class PerfilActivity : AppCompatActivity() {
 
     private fun actualizarCorreo() {
         val nuevoCorreo = emailEditText.text.toString().trim()
+        if (!nuevoCorreo.contains("@") || !nuevoCorreo.contains(".")) {
+            Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         if (nuevoCorreo.isEmpty()) {
             Toast.makeText(this, "El correo no puede estar vacío", Toast.LENGTH_SHORT).show()
@@ -378,6 +387,11 @@ class PerfilActivity : AppCompatActivity() {
             Toast.makeText(this, "Rellena todos los campos", Toast.LENGTH_SHORT).show()
             return
         }
+        if (altura == null || altura < 100 || altura > 250) {
+            Toast.makeText(this, "Altura debe estar entre 100 y 250 cm", Toast.LENGTH_SHORT).show()
+            return
+        }
+
 
         val usuarioActualizado = Usuario(
             id = usuarioId,   // No se va a cambiar
@@ -409,11 +423,16 @@ class PerfilActivity : AppCompatActivity() {
             })
     }
     private fun cerrarSesion() {
+        // Limpiar datos guardados
+        getSharedPreferences("LoveLinkPrefs", MODE_PRIVATE).edit().clear().apply()
+
+        // Redirigir al login
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }
+
     private fun eliminarCuenta() {
         RetrofitClient.cuentaService.eliminarCuenta(cuentaId)
             .enqueue(object : Callback<Void> {
@@ -432,38 +451,41 @@ class PerfilActivity : AppCompatActivity() {
             })
     }
 
-    private fun actualizarImagenes() {
-        if (imagenesId == -1L) {
-            Toast.makeText(this, "Error: No se pudo obtener ID de imágenes", Toast.LENGTH_SHORT).show()
-            return
+    private fun updateImageSlot(uri: Uri?, index: Int) {
+        uri?.let {
+            imageSlots[index].setImageURI(it)
+            imageSlots[index].tag = it.toString()
+            subirImagenSlot(it, index + 1) // +1 porque los slots son del 1 al 6 en backend
         }
+    }
+    private fun subirImagenSlot(uri: Uri, slotIndex: Int) {
+        val inputStream = contentResolver.openInputStream(uri) ?: return
+        val fileBytes = inputStream.readBytes()
+        val fileName = "usuario_${usuarioId}_$slotIndex.jpg"
 
-        val imagenesActualizadas = ImagenesUsuario(
-            idImagen = imagenesId,
-            idUsuario = usuarioId,
-            imagen1 = imageSlots.getOrNull(0)?.tag as? String,
-            imagen2 = imageSlots.getOrNull(1)?.tag as? String,
-            imagen3 = imageSlots.getOrNull(2)?.tag as? String,
-            imagen4 = imageSlots.getOrNull(3)?.tag as? String,
-            imagen5 = imageSlots.getOrNull(4)?.tag as? String,
-            imagen6 = imageSlots.getOrNull(5)?.tag as? String
+        val requestFile = MultipartBody.Part.createFormData(
+            "file", fileName,
+            RequestBody.create("image/*".toMediaTypeOrNull(), fileBytes)
         )
 
-        RetrofitClient.imagenesUsuarioService.actualizarImagenes(imagenesId, imagenesActualizadas)
-            .enqueue(object : Callback<ImagenesUsuario> {
-                override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
-                    if (response.isSuccessful) {
-                        Toast.makeText(this@PerfilActivity, "Imágenes actualizadas correctamente", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@PerfilActivity, "Error al actualizar imágenes", Toast.LENGTH_SHORT).show()
-                    }
-                }
+        val idUsuarioBody = RequestBody.create("text/plain".toMediaTypeOrNull(), usuarioId.toString())
+        val numeroBody = RequestBody.create("text/plain".toMediaTypeOrNull(), slotIndex.toString())
 
-                override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
-                    Toast.makeText(this@PerfilActivity, "Fallo de red", Toast.LENGTH_SHORT).show()
+        RetrofitClient.imagenesUsuarioService.actualizarImagenSlot(
+            requestFile, idUsuarioBody, numeroBody
+        ).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(this@PerfilActivity, "Imagen $slotIndex actualizada ✅", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@PerfilActivity, "Error al actualizar imagen $slotIndex ❌", Toast.LENGTH_SHORT).show()
                 }
-            })
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(this@PerfilActivity, "Fallo de red al subir imagen $slotIndex", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
-
 
 }
