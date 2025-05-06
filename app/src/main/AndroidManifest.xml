@@ -63,6 +63,9 @@
         <activity
             android:name=".ConversacionActivity"
             android:exported="true"/>
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="true"/>
 
 
     </application>

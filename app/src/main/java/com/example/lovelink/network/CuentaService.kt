@@ -25,6 +25,10 @@ interface CuentaService {
     @DELETE("api/cuentas/{id}")
     fun eliminarCuenta(@Path("id") id: Long): Call<Void>
 
+    @GET("/api/cuentas/email/{email}")
+    fun getCuentaPorEmail(@Path("email") email: String): Call<Cuenta>
+
+
 }
 
 

@@ -151,7 +151,6 @@ class ProfileSetup2Activity : AppCompatActivity() {
                         urls[index] = response.body()?.string().orEmpty()
                         subidas++
                         if (subidas == 6) {
-                            Toast.makeText(this@ProfileSetup2Activity, "", Toast.LENGTH_SHORT).show()
                             startActivity(Intent(this@ProfileSetup2Activity, PosiblesMatchesActivity::class.java).apply {
                                 putExtra("usuario_id", usuarioId)
                             })

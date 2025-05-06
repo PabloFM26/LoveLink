@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.example.lovelink.models.Cuenta
 import com.example.lovelink.models.Usuario
@@ -14,6 +15,7 @@ import com.example.lovelink.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.security.MessageDigest
 
 class LoginActivity : Activity() {
 
@@ -26,8 +28,6 @@ class LoginActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-
-        // Comprobamos si elusuario ya ha iniciado sesión previamente
         val prefs = getSharedPreferences("LoveLinkPrefs", MODE_PRIVATE)
         val isLoggedIn = prefs.getBoolean("isLoggedIn", false)
         val usuarioId = prefs.getLong("usuarioId", -1L)
@@ -40,15 +40,11 @@ class LoginActivity : Activity() {
             return
         }
 
-        setContentView(R.layout.activity_login)
-
-        // Inicialización de vistas
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         loginButton = findViewById(R.id.loginButton)
         signupButton = findViewById(R.id.signupButton)
 
-        // Botón de inicio de sesión
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
@@ -59,7 +55,7 @@ class LoginActivity : Activity() {
             }
 
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(this, "Correo no válido. Asegúrate de que incluya '@' y dominio.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -68,8 +64,10 @@ class LoginActivity : Activity() {
                 return@setOnClickListener
             }
 
+            // 🔐 Aplicar hash SHA-256 antes de enviar
+            val hashedPassword = hashSHA256(password)
 
-            val cuenta = Cuenta(email = email, password = password, telefono = "")
+            val cuenta = Cuenta(email = email, password = hashedPassword, telefono = "")
 
             val cuentaApi = RetrofitClient.retrofit.create(CuentaApi::class.java)
             cuentaApi.login(cuenta).enqueue(object : Callback<Cuenta> {
@@ -83,7 +81,6 @@ class LoginActivity : Activity() {
                             return
                         }
 
-                        // Guardar login en SharedPreferences
                         getSharedPreferences("LoveLinkPrefs", MODE_PRIVATE).edit().apply {
                             putBoolean("isLoggedIn", true)
                             putString("email", email)
@@ -91,21 +88,16 @@ class LoginActivity : Activity() {
                             apply()
                         }
 
-                        // Obtener el usuario asociado a cuenta introducida
                         val usuarioApi = RetrofitClient.retrofit.create(UsuarioApi::class.java)
                         usuarioApi.obtenerUsuarioPorCuenta(idCuenta).enqueue(object : Callback<Usuario> {
                             override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
                                 if (response.isSuccessful && response.body() != null) {
                                     val usuario = response.body()!!
                                     val usuarioId = usuario.id ?: -1L
-
-                                    // Guardar ID del usuario por si se necesita en otras Activities
                                     getSharedPreferences("LoveLinkPrefs", MODE_PRIVATE).edit().apply {
                                         putLong("usuarioId", usuarioId)
                                         apply()
                                     }
-
-                                    // Ir a pantalla principal
                                     val intent = Intent(this@LoginActivity, PosiblesMatchesActivity::class.java)
                                     intent.putExtra("usuario_id", usuarioId)
                                     startActivity(intent)
@@ -131,10 +123,20 @@ class LoginActivity : Activity() {
             })
         }
 
-        // Botón de registro
         signupButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
+        val forgotPasswordTextView = findViewById<TextView>(R.id.forgotPasswordTextView)
+        forgotPasswordTextView.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
+
+    }
+
+    private fun hashSHA256(input: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 }

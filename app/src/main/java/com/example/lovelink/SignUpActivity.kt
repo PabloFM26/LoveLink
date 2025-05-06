@@ -13,8 +13,10 @@ import com.example.lovelink.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.security.MessageDigest
 
 class SignUpActivity : Activity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -31,40 +33,37 @@ class SignUpActivity : Activity() {
             val password = passwordEditText.text.toString()
             val password2 = password2EditText.text.toString()
 
-            // Validación de campos vacíos
             if (telefono.isEmpty() || email.isEmpty() || password.isEmpty() || password2.isEmpty()) {
                 Toast.makeText(this, "Rellena todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Validación de teléfono español (9 dígitos, empieza por 6)
             if (!Regex("^6\\d{8}$").matches(telefono)) {
                 Toast.makeText(this, "El teléfono debe comenzar por 6 y tener 9 dígitos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Validación de email
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 Toast.makeText(this, "Correo electrónico no válido", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Validación de contraseña
             if (password.length < 6 || !password.contains(Regex("[^A-Za-z0-9]"))) {
                 Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres y un carácter especial", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Comprobación de coincidencia
             if (password != password2) {
                 Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            val hashedPassword = hashSHA256(password)
+
             val cuenta = Cuenta(
                 telefono = telefono,
                 email = email,
-                password = password
+                password = hashedPassword
             )
 
             RetrofitClient.cuentaService.registrarCuenta(cuenta).enqueue(object : Callback<Cuenta> {
@@ -78,7 +77,6 @@ class SignUpActivity : Activity() {
                             finish()
                         }
                     } else {
-                        // Comprobar si es error de duplicado
                         val errorBody = response.errorBody()?.string()
                         when {
                             errorBody?.contains("telefono") == true -> {
@@ -101,6 +99,10 @@ class SignUpActivity : Activity() {
                 }
             })
         }
+    }
 
+    private fun hashSHA256(input: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 }

@@ -325,7 +325,6 @@ class PerfilActivity : AppCompatActivity() {
         val nuevaContrasena = findViewById<EditText>(R.id.newPasswordEditText).text.toString().trim()
         val repetirNuevaContrasena = password2EditText.text.toString().trim()
 
-        // Validaciones
         if (contrasenaActual.isEmpty() || nuevaContrasena.isEmpty() || repetirNuevaContrasena.isEmpty()) {
             Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
             return
@@ -336,14 +335,15 @@ class PerfilActivity : AppCompatActivity() {
             return
         }
 
-        // Ahora validamos que la contraseña actual sea correcta
+        val contrasenaActualHasheada = hashSHA256(contrasenaActual)
+
         RetrofitClient.cuentaService.obtenerCuentaPorId(cuentaId).enqueue(object : Callback<Cuenta> {
             override fun onResponse(call: Call<Cuenta>, response: Response<Cuenta>) {
                 if (response.isSuccessful) {
                     val cuenta = response.body()
-                    if (cuenta != null && cuenta.password == contrasenaActual) {
-                        // Coincide, actualizar contraseña
-                        val passwordUpdate = mapOf("password" to nuevaContrasena)
+                    if (cuenta != null && cuenta.password == contrasenaActualHasheada) {
+                        val nuevaContrasenaHasheada = hashSHA256(nuevaContrasena)
+                        val passwordUpdate = mapOf("password" to nuevaContrasenaHasheada)
 
                         RetrofitClient.cuentaService.actualizarContrasena(cuentaId, passwordUpdate)
                             .enqueue(object : Callback<Cuenta> {
@@ -372,6 +372,13 @@ class PerfilActivity : AppCompatActivity() {
             }
         })
     }
+
+
+    private fun hashSHA256(input: String): String {
+        val bytes = java.security.MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
 
     private fun actualizarUsuario() {
         val nombre = nameEditText.text.toString().trim()

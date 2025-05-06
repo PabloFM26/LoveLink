@@ -73,4 +73,20 @@
         android:text="¿No tienes una cuenta? Regístrate"
         android:textColor="@color/white"
         android:backgroundTint="@color/magenta_500" />
+
+    <!-- Enlace para recuperar contraseña -->
+    <TextView
+        android:id="@+id/forgotPasswordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signupButton"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="¿Olvidaste tu contraseña?"
+        android:textColor="@color/magenta_500"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:clickable="true"
+        android:focusable="true" />
+
 </RelativeLayout>

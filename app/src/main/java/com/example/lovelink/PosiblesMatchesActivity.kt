@@ -54,7 +54,6 @@ class PosiblesMatchesActivity : Activity() {
                 Toast.makeText(this, "¡Le diste Like a ${usuariosFiltrados[indiceActual].nombre}! 💖", Toast.LENGTH_SHORT).show()
                 darLike()
             } else {
-                Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -63,7 +62,6 @@ class PosiblesMatchesActivity : Activity() {
                 Toast.makeText(this, "${usuariosFiltrados[indiceActual].nombre} descartado 💔", Toast.LENGTH_SHORT).show()
                 darNope()
             } else {
-                Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -225,7 +223,6 @@ class PosiblesMatchesActivity : Activity() {
 
     private fun mostrarUsuarioActual() {
         if (indiceActual >= usuariosFiltrados.size) {
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
             nombreEdadText.text = "No hay más usuarios disponibles"
             localidadText.text = ""
             imagenUsuario.setImageResource(android.R.color.transparent)
@@ -303,7 +300,7 @@ class PosiblesMatchesActivity : Activity() {
                         RetrofitClient.matchService.actualizarMatch(actualizado.idMatch!!, actualizado)
                             .enqueue(object : Callback<Match> {
                                 override fun onResponse(call: Call<Match>, response: Response<Match>) {
-                                    Toast.makeText(this@PosiblesMatchesActivity, "¡Like actualizado!", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@PosiblesMatchesActivity, "¡Tienes un nuevo match!", Toast.LENGTH_SHORT).show()
                                     usuariosFiltrados.removeAt(indiceActual)
                                     mostrarUsuarioActual()
                                 }
@@ -325,7 +322,6 @@ class PosiblesMatchesActivity : Activity() {
                         RetrofitClient.matchService.crearMatch(nuevoMatch)
                             .enqueue(object : Callback<Match> {
                                 override fun onResponse(call: Call<Match>, response: Response<Match>) {
-                                    Toast.makeText(this@PosiblesMatchesActivity, "¡Nuevo match creado!", Toast.LENGTH_SHORT).show()
                                     usuariosFiltrados.removeAt(indiceActual)
                                     mostrarUsuarioActual()
                                 }

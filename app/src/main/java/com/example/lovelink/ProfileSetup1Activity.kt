@@ -114,7 +114,6 @@ class ProfileSetup1Activity : Activity() {
                         val usuarioId = usuarioCreado.id
 
                         if (usuarioId != null && usuarioId > 0) {
-                            Toast.makeText(this@ProfileSetup1Activity, "", Toast.LENGTH_SHORT).show()
 
                             Handler(mainLooper).postDelayed({
                                 val intent = Intent(this@ProfileSetup1Activity, ProfileSetup2Activity::class.java).apply {
@@ -171,13 +170,20 @@ class ProfileSetup1Activity : Activity() {
         val views = ids.map { findViewById<TextView>(it) }
         views.forEach { view ->
             view.setOnClickListener {
+                // Reinicia el estilo de todos los botones del grupo
                 views.forEach {
                     it.setTextColor(ContextCompat.getColor(this, R.color.gender_unselected))
+                    it.setBackgroundResource(R.drawable.gender_selector) // Fondo normal
                 }
-                view.setTextColor(ContextCompat.getColor(this, R.color.black))
-                view.setBackgroundResource(R.drawable.gender_selector_blue)
+
+                // Aplica el estilo seleccionado
+                view.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+                view.setBackgroundResource(R.drawable.gender_selector_blue) // Fondo activo
+
+                // Guarda el valor
                 onSelected(view.text.toString())
             }
         }
     }
+
 }
