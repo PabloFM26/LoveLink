@@ -54,7 +54,7 @@ class PosiblesMatchesActivity : Activity() {
                 Toast.makeText(this, "¡Le diste Like a ${usuariosFiltrados[indiceActual].nombre}! 💖", Toast.LENGTH_SHORT).show()
                 darLike()
             } else {
-                Toast.makeText(this, "No hay más usuarios disponibles", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -63,7 +63,7 @@ class PosiblesMatchesActivity : Activity() {
                 Toast.makeText(this, "${usuariosFiltrados[indiceActual].nombre} descartado 💔", Toast.LENGTH_SHORT).show()
                 darNope()
             } else {
-                Toast.makeText(this, "No hay más usuarios disponibles", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -97,7 +97,7 @@ class PosiblesMatchesActivity : Activity() {
                     if (response.isSuccessful) {
                         val matches = response.body() ?: emptyList()
 
-                        // 👀 Filtramos usuarios con los que ya diste like (para que NO se muestren)
+                        //  Filtramos usuarios con los que ya se han dado like (para que NO se muestren)
                         val usuariosNoMostrar = mutableSetOf<Long>()
 
                         matches.forEach {
@@ -108,7 +108,7 @@ class PosiblesMatchesActivity : Activity() {
                             }
                         }
 
-                        // Ahora cargamos los usuarios y los filtramos
+                        // Cargamos los usuarios y los filtramos
                         RetrofitClient.usuarioService.obtenerTodosLosUsuarios()
                             .enqueue(object : Callback<List<Usuario>> {
                                 override fun onResponse(call: Call<List<Usuario>>, response: Response<List<Usuario>>) {
@@ -225,7 +225,7 @@ class PosiblesMatchesActivity : Activity() {
 
     private fun mostrarUsuarioActual() {
         if (indiceActual >= usuariosFiltrados.size) {
-            Toast.makeText(this, "No hay más usuarios compatibles", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
             nombreEdadText.text = "No hay más usuarios disponibles"
             localidadText.text = ""
             imagenUsuario.setImageResource(android.R.color.transparent)

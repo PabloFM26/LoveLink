@@ -114,7 +114,7 @@ class ProfileSetup1Activity : Activity() {
                         val usuarioId = usuarioCreado.id
 
                         if (usuarioId != null && usuarioId > 0) {
-                            Toast.makeText(this@ProfileSetup1Activity, "Datos guardados", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@ProfileSetup1Activity, "", Toast.LENGTH_SHORT).show()
 
                             Handler(mainLooper).postDelayed({
                                 val intent = Intent(this@ProfileSetup1Activity, ProfileSetup2Activity::class.java).apply {
