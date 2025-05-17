@@ -22,5 +22,10 @@
         <item name="android:textSize">14sp</item>
         <item name="android:layout_margin">4dp</item>
     </style>
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">#8E24AA</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+    </style>
+
 
 </resources>

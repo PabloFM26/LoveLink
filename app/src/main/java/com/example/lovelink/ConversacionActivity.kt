@@ -128,7 +128,6 @@ class ConversacionActivity : AppCompatActivity() {
                                 }
 
                                 override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
-                                    // Imagen opcional, así que no hacemos nada
                                 }
                             })
                     }
@@ -145,7 +144,7 @@ class ConversacionActivity : AppCompatActivity() {
             hint = "Tu respuesta..."
         }
 
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(this, R.style.CustomAlertDialog)
             .setTitle("Pregunta sorpresa 🎉")
             .setMessage(pregunta)
             .setView(input)
@@ -157,11 +156,11 @@ class ConversacionActivity : AppCompatActivity() {
                     enviarMensajeAlServidor(mensajePregunta) {
                         enviarMensajeAlServidor(mensajeRespuesta)
                     }
-
                 }
             }
             .setNegativeButton("Cancelar", null)
             .show()
+
     }
 
     private fun enviarMensajeAlServidor(mensaje: Mensaje, onSent: (() -> Unit)? = null) {

@@ -112,62 +112,40 @@ class MatchesActivity : Activity() {
                     override fun onResponse(call: Call<Chat?>, response: Response<Chat?>) {
                         val chatExistente = response.body()
                         if (chatExistente != null) {
-                            // Si ya existe el chat, redirige al chat existente
-                            val intent = Intent(this@MatchesActivity, ChatsActivity::class.java)
-                            intent.putExtra("usuario_id", usuarioId)
-                            intent.putExtra("match_id", usuario.id)
-                            intent.putExtra("chat_id", chatExistente.idChat)
-                            startActivity(intent)
+                            irAConversacion(chatExistente.idChat!!, usuario.id!!)
                         } else {
-                            // Si no existe, creamos uno nuevo
                             val nuevoChat = Chat(
                                 matchId = match.idMatch!!,
                                 usuario1 = usuarioId,
                                 usuario2 = usuario.id!!
                             )
-
                             RetrofitClient.chatService.crearChat(nuevoChat)
                                 .enqueue(object : Callback<Chat> {
-                                    override fun onResponse(
-                                        call: Call<Chat>,
-                                        response: Response<Chat>
-                                    ) {
-                                        val intent =
-                                            Intent(this@MatchesActivity, ChatsActivity::class.java)
-                                        intent.putExtra("usuario_id", usuarioId)
-                                        intent.putExtra("match_id", usuario.id)
-                                        intent.putExtra("chat_id", response.body()?.idChat)
-                                        startActivity(intent)
+                                    override fun onResponse(call: Call<Chat>, response: Response<Chat>) {
+                                        irAConversacion(response.body()?.idChat!!, usuario.id!!)
                                     }
 
                                     override fun onFailure(call: Call<Chat>, t: Throwable) {
-                                        Toast.makeText(
-                                            this@MatchesActivity,
-                                            "Error creando chat 💀",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        Toast.makeText(this@MatchesActivity, "Error creando chat 💀", Toast.LENGTH_SHORT).show()
                                     }
                                 })
                         }
                     }
 
                     override fun onFailure(call: Call<Chat?>, t: Throwable) {
-                        Toast.makeText(
-                            this@MatchesActivity,
-                            "Error consultando chat existente 🥴",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@MatchesActivity, "Error consultando chat existente 🥴", Toast.LENGTH_SHORT).show()
                     }
                 })
         }
 
-
-            matchesContainer.addView(item)
+        matchesContainer.addView(item)
     }
-    private fun irAChat(idChat: Long?) {
-        val intent = Intent(this@MatchesActivity, ChatsActivity::class.java)
+
+    private fun irAConversacion(chatId: Long, otroUsuarioId: Long) {
+        val intent = Intent(this, ConversacionActivity::class.java)
         intent.putExtra("usuario_id", usuarioId)
-        intent.putExtra("chat_id", idChat)
+        intent.putExtra("chat_id", chatId)
+        intent.putExtra("otro_usuario_id", otroUsuarioId)
         startActivity(intent)
     }
 

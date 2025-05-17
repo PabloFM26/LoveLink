@@ -8,7 +8,4 @@ import retrofit2.http.Path
 interface UsuarioApi {
     @GET("/api/usuarios/cuenta/{idCuenta}")
     fun obtenerUsuarioPorCuenta(@Path("idCuenta") idCuenta: Long): Call<Usuario>
-
-    @GET("api/usuarios/{id}")
-    fun getUsuarioPorId(@Path("id") id: Long): Call<Usuario>
 }

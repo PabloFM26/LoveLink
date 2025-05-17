@@ -7,14 +7,12 @@
     android:background="@color/dark_blue_900">
 
     <!-- Barra superior con flecha, emoji y nombre -->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraSuperior"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:orientation="horizontal"
         android:background="@color/magenta_500"
         android:padding="8dp"
-        android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -25,17 +23,22 @@
             android:layout_height="wrap_content"
             android:text="⬅️"
             android:textSize="24sp"
-            android:layout_marginEnd="12dp"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageView
             android:id="@+id/fotoUsuario"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:scaleType="centerCrop"
             android:background="@drawable/bg_circular"
-            android:contentDescription="Foto del otro usuario" />
+            android:contentDescription="Foto del otro usuario"
+            app:layout_constraintStart_toEndOf="@id/btnVolver"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/nombreUsuario"
@@ -44,7 +47,11 @@
             android:text="Nombre"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/fotoUsuario"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/btnPregunta"
@@ -53,10 +60,12 @@
             android:text="🎲"
             android:textSize="24sp"
             android:textColor="@android:color/white"
-            android:layout_marginStart="12dp"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="4dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
 
     <!-- Lista de mensajes -->
     <androidx.recyclerview.widget.RecyclerView

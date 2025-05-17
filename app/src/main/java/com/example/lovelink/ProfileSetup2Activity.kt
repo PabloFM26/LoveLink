@@ -131,7 +131,7 @@ class ProfileSetup2Activity : AppCompatActivity() {
 
         val faltantes = imageUris.withIndex().filter { it.value == null }.map { it.index + 1 }
         if (faltantes.isNotEmpty()) {
-            Toast.makeText(this, "Selecciona todas las imágenes (faltan: ${faltantes.joinToString()})", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Selecciona todas las imágenes (faltan huecos o hueco: ${faltantes.joinToString()})", Toast.LENGTH_LONG).show()
             return
         }
 

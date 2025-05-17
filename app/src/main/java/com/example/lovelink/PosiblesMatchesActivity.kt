@@ -27,7 +27,7 @@ class PosiblesMatchesActivity : Activity() {
     private var miPerfil: Usuario? = null
 
     private val usuariosFiltrados = mutableListOf<Usuario>()
-    private val imagenesUsuarios = mutableMapOf<Long, List<String>>() // idUsuario -> lista de imágenes
+    private val imagenesUsuarios = mutableMapOf<Long, List<String>>()
     private val usuariosDescartados = mutableSetOf<Long>()
 
     private var indiceActual = 0
@@ -39,7 +39,6 @@ class PosiblesMatchesActivity : Activity() {
 
         usuarioId = intent.getLongExtra("usuario_id", -1L)
 
-        // Referencias UI
         nombreEdadText = findViewById(R.id.nombreEdadText)
         localidadText = findViewById(R.id.localidadText)
         imagenUsuario = findViewById(R.id.imagenUsuario)
@@ -53,7 +52,6 @@ class PosiblesMatchesActivity : Activity() {
             if (indiceActual < usuariosFiltrados.size) {
                 Toast.makeText(this, "¡Le diste Like a ${usuariosFiltrados[indiceActual].nombre}! 💖", Toast.LENGTH_SHORT).show()
                 darLike()
-            } else {
             }
         }
 
@@ -61,7 +59,6 @@ class PosiblesMatchesActivity : Activity() {
             if (indiceActual < usuariosFiltrados.size) {
                 Toast.makeText(this, "${usuariosFiltrados[indiceActual].nombre} descartado 💔", Toast.LENGTH_SHORT).show()
                 darNope()
-            } else {
             }
         }
 
@@ -69,7 +66,6 @@ class PosiblesMatchesActivity : Activity() {
             mostrarSiguienteImagen()
         }
     }
-
 
     private fun cargarMiPerfilYUsuarios() {
         RetrofitClient.usuarioService.getUsuarioById(usuarioId).enqueue(object : Callback<Usuario> {
@@ -89,64 +85,50 @@ class PosiblesMatchesActivity : Activity() {
     }
 
     private fun cargarTodosLosUsuarios() {
-        RetrofitClient.matchService.obtenerMatchesUsuario(usuarioId)
-            .enqueue(object : Callback<List<Match>> {
-                override fun onResponse(call: Call<List<Match>>, response: Response<List<Match>>) {
-                    if (response.isSuccessful) {
-                        val matches = response.body() ?: emptyList()
+        RetrofitClient.matchService.obtenerMatchesUsuario(usuarioId).enqueue(object : Callback<List<Match>> {
+            override fun onResponse(call: Call<List<Match>>, response: Response<List<Match>>) {
+                if (response.isSuccessful) {
+                    val matches = response.body() ?: emptyList()
+                    val usuariosNoMostrar = mutableSetOf<Long>()
 
-                        //  Filtramos usuarios con los que ya se han dado like (para que NO se muestren)
-                        val usuariosNoMostrar = mutableSetOf<Long>()
+                    matches.forEach {
+                        if (it.usuario1 == usuarioId && it.likeUsuario1 == true) {
+                            usuariosNoMostrar.add(it.usuario2)
+                        } else if (it.usuario2 == usuarioId && it.likeUsuario2 == true) {
+                            usuariosNoMostrar.add(it.usuario1)
+                        }
+                    }
 
-                        matches.forEach {
-                            if (it.usuario1 == usuarioId && it.likeUsuario1 == true) {
-                                usuariosNoMostrar.add(it.usuario2)
-                            } else if (it.usuario2 == usuarioId && it.likeUsuario2 == true) {
-                                usuariosNoMostrar.add(it.usuario1)
+                    RetrofitClient.usuarioService.obtenerTodosLosUsuarios().enqueue(object : Callback<List<Usuario>> {
+                        override fun onResponse(call: Call<List<Usuario>>, response: Response<List<Usuario>>) {
+                            if (response.isSuccessful) {
+                                val usuarios = response.body()?.filter {
+                                    it.id != usuarioId && !usuariosNoMostrar.contains(it.id)
+                                } ?: emptyList()
+                                filtrarUsuariosCompatibles(usuarios)
+                            } else {
+                                Toast.makeText(this@PosiblesMatchesActivity, "Error cargando usuarios", Toast.LENGTH_SHORT).show()
                             }
                         }
 
-                        // Cargamos los usuarios y los filtramos
-                        RetrofitClient.usuarioService.obtenerTodosLosUsuarios()
-                            .enqueue(object : Callback<List<Usuario>> {
-                                override fun onResponse(call: Call<List<Usuario>>, response: Response<List<Usuario>>) {
-                                    if (response.isSuccessful) {
-                                        val usuarios = response.body()?.filter {
-                                            it.id != usuarioId && !usuariosNoMostrar.contains(it.id)
-                                        } ?: emptyList()
-                                        filtrarUsuariosCompatibles(usuarios)
-                                    } else {
-                                        Toast.makeText(this@PosiblesMatchesActivity, "Error cargando usuarios", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-
-                                override fun onFailure(call: Call<List<Usuario>>, t: Throwable) {
-                                    Toast.makeText(this@PosiblesMatchesActivity, "Fallo cargando usuarios", Toast.LENGTH_SHORT).show()
-                                }
-                            })
-
-                    } else {
-                        Toast.makeText(this@PosiblesMatchesActivity, "Error obteniendo matches", Toast.LENGTH_SHORT).show()
-                    }
+                        override fun onFailure(call: Call<List<Usuario>>, t: Throwable) {
+                            Toast.makeText(this@PosiblesMatchesActivity, "Fallo cargando usuarios", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                } else {
+                    Toast.makeText(this@PosiblesMatchesActivity, "Error obteniendo matches", Toast.LENGTH_SHORT).show()
                 }
+            }
 
-                override fun onFailure(call: Call<List<Match>>, t: Throwable) {
-                    Toast.makeText(this@PosiblesMatchesActivity, "Fallo obteniendo matches", Toast.LENGTH_SHORT).show()
-                }
-            })
+            override fun onFailure(call: Call<List<Match>>, t: Throwable) {
+                Toast.makeText(this@PosiblesMatchesActivity, "Fallo obteniendo matches", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
-
-
 
     private fun filtrarUsuariosCompatibles(usuarios: List<Usuario>) {
         usuariosFiltrados.clear()
-
-        usuarios.forEach { candidato ->
-            if (esCompatible(miPerfil!!, candidato)) {
-                usuariosFiltrados.add(candidato)
-            }
-        }
-
+        usuarios.forEach { if (esCompatible(miPerfil!!, it)) usuariosFiltrados.add(it) }
         usuariosFiltrados.shuffle()
 
         if (usuariosFiltrados.isEmpty()) {
@@ -161,31 +143,17 @@ class PosiblesMatchesActivity : Activity() {
     }
 
     private fun esCompatible(yo: Usuario, candidato: Usuario): Boolean {
-        val edadOk = candidato.edad != null && yo.edad != null &&
-                candidato.edad in (yo.edad!! - 5).coerceAtLeast(18)..(yo.edad!! + 5)
-
+        val edadOk = candidato.edad != null && yo.edad != null && candidato.edad in (yo.edad!! - 5).coerceAtLeast(18)..(yo.edad!! + 5)
         val yoGenero = yo.genero?.lowercase() ?: return false
         val yoOrientacion = yo.orientacionSexual?.lowercase() ?: return false
         val candidatoGenero = candidato.genero?.lowercase() ?: return false
         val candidatoOrientacion = candidato.orientacionSexual?.lowercase() ?: return false
 
         val generoOk = when (yoOrientacion) {
-            "heterosexual" -> (
-                    (yoGenero == "hombre" && candidatoGenero == "mujer" && candidatoOrientacion == "heterosexual") ||
-                            (yoGenero == "mujer" && candidatoGenero == "hombre" && candidatoOrientacion == "heterosexual")
-                    )
-            "homosexual" -> (
-                    yoGenero == candidatoGenero && candidatoOrientacion == "homosexual"
-                    )
-            "bisexual" -> (
-                    (candidatoOrientacion == "bisexual" && (candidatoGenero == "hombre" || candidatoGenero == "mujer"))
-                    )
-            "pansexual" -> (
-                    (candidatoOrientacion == "pansexual" && (candidatoGenero == "hombre" || candidatoGenero == "mujer"))
-                    )
-            "asexual" -> (
-                    (candidatoOrientacion == "asexual" && (candidatoGenero == "hombre" || candidatoGenero == "mujer"))
-                    )
+            "heterosexual" -> (yoGenero == "hombre" && candidatoGenero == "mujer" && candidatoOrientacion == "heterosexual") ||
+                    (yoGenero == "mujer" && candidatoGenero == "hombre" && candidatoOrientacion == "heterosexual")
+            "homosexual" -> yoGenero == candidatoGenero && candidatoOrientacion == "homosexual"
+            "bisexual", "pansexual", "asexual" -> candidatoOrientacion == yoOrientacion
             "otro" -> true
             else -> false
         }
@@ -193,33 +161,22 @@ class PosiblesMatchesActivity : Activity() {
         return edadOk && generoOk
     }
 
-
     private fun cargarImagenesUsuario(idUsuario: Long, onComplete: (() -> Unit)? = null) {
-        RetrofitClient.imagenesUsuarioService.getImagenesByUsuarioId(idUsuario)
-            .enqueue(object : Callback<ImagenesUsuario> {
-                override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
-                    val imagenes = response.body()
-                    if (imagenes != null) {
-                        val listaImagenes = listOf(
-                            imagenes.imagen1 ?: "",
-                            imagenes.imagen2 ?: "",
-                            imagenes.imagen3 ?: "",
-                            imagenes.imagen4 ?: "",
-                            imagenes.imagen5 ?: "",
-                            imagenes.imagen6 ?: ""
-                        )
-                        imagenesUsuarios[idUsuario] = listaImagenes
-                    }
-                    onComplete?.invoke()
+        RetrofitClient.imagenesUsuarioService.getImagenesByUsuarioId(idUsuario).enqueue(object : Callback<ImagenesUsuario> {
+            override fun onResponse(call: Call<ImagenesUsuario>, response: Response<ImagenesUsuario>) {
+                val imagenes = response.body()
+                if (imagenes != null) {
+                    val lista = listOf(imagenes.imagen1, imagenes.imagen2, imagenes.imagen3, imagenes.imagen4, imagenes.imagen5, imagenes.imagen6).map { it ?: "" }
+                    imagenesUsuarios[idUsuario] = lista
                 }
+                onComplete?.invoke()
+            }
 
-                override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
-                    onComplete?.invoke()
-                }
-            })
+            override fun onFailure(call: Call<ImagenesUsuario>, t: Throwable) {
+                onComplete?.invoke()
+            }
+        })
     }
-
-
 
     private fun mostrarUsuarioActual() {
         if (indiceActual >= usuariosFiltrados.size) {
@@ -232,8 +189,6 @@ class PosiblesMatchesActivity : Activity() {
         }
 
         val usuario = usuariosFiltrados[indiceActual]
-
-        // Si ya lo descartamos antes, pasamos al siguiente automáticamente
         if (usuariosDescartados.contains(usuario.id)) {
             avanzarUsuario()
             return
@@ -245,13 +200,8 @@ class PosiblesMatchesActivity : Activity() {
         val imagenes = imagenesUsuarios[usuario.id]
         imagenActual = 0
 
-        if (!imagenes.isNullOrEmpty()) {
-            val rutaImagen = imagenes[imagenActual]
-            cargarImagen(rutaImagen)
-        } else {
-            imagenUsuario.setImageResource(android.R.color.transparent)
-        }
-
+        if (!imagenes.isNullOrEmpty()) cargarImagen(imagenes[imagenActual])
+        else imagenUsuario.setImageResource(android.R.color.transparent)
 
         btnLike.isEnabled = true
         btnNope.isEnabled = true
@@ -260,97 +210,78 @@ class PosiblesMatchesActivity : Activity() {
     private fun mostrarSiguienteImagen() {
         val usuario = usuariosFiltrados.getOrNull(indiceActual) ?: return
         val imagenes = imagenesUsuarios[usuario.id] ?: return
-
         if (imagenes.isNotEmpty()) {
             imagenActual = (imagenActual + 1) % imagenes.size
-            val rutaImagen = imagenes[imagenActual]
-            cargarImagen(rutaImagen)
+            cargarImagen(imagenes[imagenActual])
         }
-
     }
+
     private fun cargarImagen(ruta: String) {
-        if (ruta.isBlank()) {
-            imagenUsuario.setImageResource(android.R.color.transparent)
-            return
-        }
-
-        Glide.with(this)
-            .load(ruta)
-            .skipMemoryCache(true)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .into(imagenUsuario)
+        if (ruta.isBlank()) imagenUsuario.setImageResource(android.R.color.transparent)
+        else Glide.with(this).load(ruta).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(imagenUsuario)
     }
 
+    private fun mostrarSiguienteUsuario() {
+        val siguiente = usuariosFiltrados.getOrNull(indiceActual + 1)
+        usuariosFiltrados.removeAt(indiceActual)
+        if (siguiente != null) {
+            cargarImagenesUsuario(siguiente.id!!) {
+                mostrarUsuarioActual()
+            }
+        } else {
+            mostrarUsuarioActual()
+        }
+    }
 
     private fun darLike() {
         val usuarioLikeado = usuariosFiltrados[indiceActual]
 
-        RetrofitClient.matchService.buscarMatchEntreUsuarios(usuarioId, usuarioLikeado.id!!)
-            .enqueue(object : Callback<Match?> {
-                override fun onResponse(call: Call<Match?>, response: Response<Match?>) {
-                    val matchExistente = response.body()
+        RetrofitClient.matchService.buscarMatchEntreUsuarios(usuarioId, usuarioLikeado.id!!).enqueue(object : Callback<Match?> {
+            override fun onResponse(call: Call<Match?>, response: Response<Match?>) {
+                val match = response.body()
 
-                    if (matchExistente != null) {
-                        // Ya existe → actualizamos el like correspondiente
-                        val actualizado = matchExistente.copy(
-                            likeUsuario1 = if (matchExistente.usuario1 == usuarioId) true else matchExistente.likeUsuario1,
-                            likeUsuario2 = if (matchExistente.usuario2 == usuarioId) true else matchExistente.likeUsuario2
-                        )
+                if (match != null) {
+                    val actualizado = match.copy(
+                        likeUsuario1 = if (match.usuario1 == usuarioId) true else match.likeUsuario1,
+                        likeUsuario2 = if (match.usuario2 == usuarioId) true else match.likeUsuario2
+                    )
 
-                        RetrofitClient.matchService.actualizarMatch(actualizado.idMatch!!, actualizado)
-                            .enqueue(object : Callback<Match> {
-                                override fun onResponse(call: Call<Match>, response: Response<Match>) {
-                                    Toast.makeText(this@PosiblesMatchesActivity, "¡Tienes un nuevo match!", Toast.LENGTH_SHORT).show()
-                                    usuariosFiltrados.removeAt(indiceActual)
-                                    mostrarUsuarioActual()
-                                }
+                    RetrofitClient.matchService.actualizarMatch(actualizado.idMatch!!, actualizado).enqueue(object : Callback<Match> {
+                        override fun onResponse(call: Call<Match>, response: Response<Match>) {
+                            Toast.makeText(this@PosiblesMatchesActivity, "¡Tienes un nuevo match!", Toast.LENGTH_SHORT).show()
+                            mostrarSiguienteUsuario()
+                        }
 
-                                override fun onFailure(call: Call<Match>, t: Throwable) {
-                                    Toast.makeText(this@PosiblesMatchesActivity, "Error al actualizar match", Toast.LENGTH_SHORT).show()
-                                }
-                            })
+                        override fun onFailure(call: Call<Match>, t: Throwable) {
+                            Toast.makeText(this@PosiblesMatchesActivity, "Error al actualizar match", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                } else {
+                    val nuevoMatch = Match(usuario1 = usuarioId, usuario2 = usuarioLikeado.id!!, likeUsuario1 = true, likeUsuario2 = false)
 
-                    } else {
-                        // No existe → creamos uno nuevo
-                        val nuevoMatch = Match(
-                            usuario1 = usuarioId,
-                            usuario2 = usuarioLikeado.id!!,
-                            likeUsuario1 = true,
-                            likeUsuario2 = false
-                        )
+                    RetrofitClient.matchService.crearMatch(nuevoMatch).enqueue(object : Callback<Match> {
+                        override fun onResponse(call: Call<Match>, response: Response<Match>) {
+                            mostrarSiguienteUsuario()
+                        }
 
-                        RetrofitClient.matchService.crearMatch(nuevoMatch)
-                            .enqueue(object : Callback<Match> {
-                                override fun onResponse(call: Call<Match>, response: Response<Match>) {
-                                    usuariosFiltrados.removeAt(indiceActual)
-                                    mostrarUsuarioActual()
-                                }
-
-                                override fun onFailure(call: Call<Match>, t: Throwable) {
-                                    Toast.makeText(this@PosiblesMatchesActivity, "Error creando match", Toast.LENGTH_SHORT).show()
-                                }
-                            })
-                    }
+                        override fun onFailure(call: Call<Match>, t: Throwable) {
+                            Toast.makeText(this@PosiblesMatchesActivity, "Error creando match", Toast.LENGTH_SHORT).show()
+                        }
+                    })
                 }
+            }
 
-                override fun onFailure(call: Call<Match?>, t: Throwable) {
-                    Toast.makeText(this@PosiblesMatchesActivity, "Error buscando match", Toast.LENGTH_SHORT).show()
-                }
-            })
+            override fun onFailure(call: Call<Match?>, t: Throwable) {
+                Toast.makeText(this@PosiblesMatchesActivity, "Error buscando match", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
-
-
-
 
     private fun darNope() {
         val usuarioDescartado = usuariosFiltrados[indiceActual]
         usuariosDescartados.add(usuarioDescartado.id!!)
-
-        usuariosFiltrados.removeAt(indiceActual)
-
-        mostrarUsuarioActual()
+        mostrarSiguienteUsuario()
     }
-
 
     private fun avanzarUsuario() {
         indiceActual++
@@ -361,25 +292,16 @@ class PosiblesMatchesActivity : Activity() {
         findViewById<Button>(R.id.nav_home).setOnClickListener {
             Toast.makeText(this, "Ya estás en Inicio 🏠", Toast.LENGTH_SHORT).show()
         }
-
         findViewById<Button>(R.id.nav_matches).setOnClickListener {
-            val intent = Intent(this, MatchesActivity::class.java)
-            intent.putExtra("usuario_id", usuarioId)
-            startActivity(intent)
+            startActivity(Intent(this, MatchesActivity::class.java).putExtra("usuario_id", usuarioId))
             finish()
         }
-
         findViewById<Button>(R.id.nav_chats).setOnClickListener {
-            val intent = Intent(this, ChatsActivity::class.java)
-            intent.putExtra("usuario_id", usuarioId)
-            startActivity(intent)
+            startActivity(Intent(this, ChatsActivity::class.java).putExtra("usuario_id", usuarioId))
             finish()
         }
-
         findViewById<Button>(R.id.nav_profile).setOnClickListener {
-            val intent = Intent(this, PerfilActivity::class.java)
-            intent.putExtra("usuario_id", usuarioId)
-            startActivity(intent)
+            startActivity(Intent(this, PerfilActivity::class.java).putExtra("usuario_id", usuarioId))
             finish()
         }
     }
