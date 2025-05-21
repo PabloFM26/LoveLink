@@ -74,7 +74,7 @@ class PosiblesMatchesActivity : Activity() {
                     miPerfil = response.body()
                     cargarTodosLosUsuarios()
                 } else {
-                    Toast.makeText(this@PosiblesMatchesActivity, "Error cargando tu perfil", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PosiblesMatchesActivity, "Error al cargar tu perfil", Toast.LENGTH_SHORT).show()
                 }
             }
 
