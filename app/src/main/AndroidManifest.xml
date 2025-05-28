@@ -25,7 +25,8 @@
         <!-- Actividad principal (LoveLink) -->
         <activity
             android:name=".LoveLink"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -35,38 +36,48 @@
         <!-- Otras actividades -->
         <activity
             android:name=".LoginActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SignUpActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ProfileSetup1Activity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ProfileSetup2Activity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PosiblesMatchesActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MatchesActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ChatsActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PerfilActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ConversacionActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ForgotPasswordActivity"
-            android:exported="true"/>
-
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
     </application>
 </manifest>
